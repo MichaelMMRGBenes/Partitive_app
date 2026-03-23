@@ -797,6 +797,47 @@ elif s["feedback"] == "wrong":
     bg_color = "#FFEBEE"
 
 
+# --- 2. DYNAMIC CSS ---
+# ... (ponechte definice barev border_color a bg_color) ...
+
+st.markdown(f"""
+<style>
+/* 1. Nastavení pozadí pro input i textovou oblast */
+div[data-baseweb="base-input"], 
+div[data-baseweb="textarea"] {{
+    border: 2px solid {border_color} !important;
+    border-radius: 8px !important;
+    background-color: {bg_color} !important;
+}}
+
+/* 2. Oprava barvy textu uvnitř INPUTU (hra) */
+div[data-baseweb="input"] input {{
+    color: #1E1E1E !important;
+    -webkit-text-fill-color: #1E1E1E !important;
+}}
+
+/* 3. Oprava barvy textu uvnitř TEXT_AREA (menu - Custom List) */
+div[data-baseweb="textarea"] textarea {{
+    color: #1E1E1E !important;
+    -webkit-text-fill-color: #1E1E1E !important;
+    background-color: transparent !important;
+}}
+
+/* 4. Viditelnost placeholderu pro oba prvky */
+div[data-baseweb="input"] input::placeholder,
+div[data-baseweb="textarea"] textarea::placeholder {{
+    color: #555555 !important;
+    opacity: 1; /* Aby nebyl moc průhledný */
+}}
+
+/* Odstranění zbytků původního stylu */
+div[data-baseweb="input"], div[data-baseweb="textarea"] {{ 
+    border: none !important; 
+    background-color: transparent !important; 
+}}
+[data-testid="stTextInput"] button {{ display: none !important; }}
+</style>
+""", unsafe_allow_html=True)
 
 st.markdown("""
 <style>
