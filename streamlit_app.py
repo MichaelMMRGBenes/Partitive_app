@@ -3,7 +3,20 @@ import streamlit.components.v1 as components
 import random
 import time
 import matplotlib.pyplot as plt
+import base64
 
+def play_audio(file_path):
+    with open(file_path, "rb") as f:
+        data = f.read()
+        b64 = base64.b64encode(data).decode()
+        # Přidání unikátního ID pomocí timestampu
+        unique_id = f"audio_{int(time.time() * 1000)}"
+        md = f"""
+            <audio id="{unique_id}" autoplay="true" style="display:none;">
+            <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
+            </audio>
+            """
+        st.components.v1.html(md, height=0)
 # --- 0. PLACEHOLDER DATA & LOGIC (Replace with your actual logic) ---
 WORDS = {
     # Animals & Nature
@@ -916,6 +929,7 @@ def handle_submit():
         s["feedback"] = "correct"
     else:
         s["feedback"] = "wrong"
+        s["wrong_sound_played"] = False
         if (word, case) not in s["to_repair"]:
             s["to_repair"].append((word, case))
         s["missed_current"] = True
@@ -928,6 +942,9 @@ def next_question():
     s["show_english"] = False
     s["show_reveal"] = False
     s["input_key_suffix"] += 1
+    s["correct_sound_played"] = False
+    s["wrong_sound_played"] = False
+
     
     if s["idx"] >= len(s["quiz"]):
         if s["view"] == "repair":
@@ -1145,6 +1162,9 @@ elif s["view"] == "game":
 
     # 5. Success Logic (Fixes the "stops working after correct" issue)
     if s["feedback"] == "correct":
+        if not s.get("correct_sound_played"):
+            play_audio("correct_sound.mp3")
+            s["correct_sound_played"] = True
         st.success("✅ Correct!")
         time.sleep(1.2)
         next_question()
@@ -1152,7 +1172,7 @@ elif s["view"] == "game":
 
     elif s["feedback"] == "wrong" and not s.get("show_reveal"):
             if not s.get("wrong_sound_played"):
-                #play_sound("wrong")
+                play_audio("wrong_sound.mp3")
                 s["wrong_sound_played"] = True
                 
             st.error("❌ Not quite right.")
@@ -1161,6 +1181,7 @@ elif s["view"] == "game":
             with col_btn:
                 if st.button("Show answer", use_container_width=True):
                     # --- OPRAVA: PŘIČTENÍ CHYBY ---
+                    s["wrong_sound_played"] = False 
                     s["score"]["wrong"] += 1 
                     
                     # Uložíme do seznamu k opravě, pokud tam ještě není
@@ -1299,7 +1320,7 @@ elif s["view"] == "repair":
         wrong_sound = "wrong_sound.mp3"
            # 6. Feedback Logic (Lose a heart on EVERY wrong submission)
         if s["feedback"] == "correct":
-            st.audio(correct_sound, format="audio/mpeg", autoplay=True)
+            play_audio("correct_sound.mp3")
             st.success("✅ Correct!")
             time.sleep(1.0)
             
@@ -1316,6 +1337,7 @@ elif s["view"] == "repair":
                 st.audio(wrong_sound, format="audio/mpeg", autoplay=True)
                 s["lives"] -= 1
                 s["last_processed_submit"] = s["input_key_suffix"]
+                s["feedback"] = None
                 st.rerun() # Immediate visual update of hearts
             
             st.error(f"❌ Wrong! Hearts: {s['lives']}/3")
