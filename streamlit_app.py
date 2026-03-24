@@ -5,97 +5,78 @@ import time
 import matplotlib.pyplot as plt
 
 # --- 0. PLACEHOLDER DATA & LOGIC (Replace with your actual logic) ---
-WORDS = [
-    # --- Příroda a zvířata ---
-    "koira", "kissa", "hevonen", "lehmä", "lammas", "sika", "karhu", "susi", "kettu", "jänis",
-    "lintu", "kala", "käärme", "hyönteinen", "puu", "kukka", "metsä", "järvi", "meri", "joki",
-    "vuori", "mäki", "saari", "niemi", "ranta", "taivas", "aurinko", "kuu", "tähti", "pilvi",
-    "sade", "lumi", "jää", "tuuli", "ukkonen", "kivi", "hiekka", "multa", "ruoho",
-    "lehti", "oksa", "juuri", "marja", "sieni", "puro", "lähde", "suo", "tunturi", "luonto",
+WORDS = {
+    # Animals & Nature
+    "koira": "dog", "kissa": "cat", "hevonen": "horse", "lehmä": "cow", "lammas": "sheep",
+    "sika": "pig", "karhu": "bear", "susi": "wolf", "kettu": "fox", "jänis": "hare",
+    "lintu": "bird", "kala": "fish", "käärme": "snake", "hyönteinen": "insect", "puu": "tree",
+    "kukka": "flower", "metsä": "forest", "järvi": "lake", "meri": "sea", "joki": "river",
+    "vuori": "mountain", "mäki": "hill", "saari": "island", "niemi": "peninsula", "ranta": "shore",
+    "taivas": "sky", "aurinko": "sun", "kuu": "moon", "tähti": "star", "pilvi": "cloud",
+    "sade": "rain", "lumi": "snow", "jää": "ice", "tuuli": "wind", "ukkonen": "thunder",
+    "kivi": "stone", "hiekka": "sand", "multa": "soil", "ruoho": "grass", "lehti": "leaf",
+    "oksa": "branch", "juuri": "root", "marja": "berry", "sieni": "mushroom", "puro": "brook",
+    "lähde": "spring", "suo": "swamp", "tunturi": "fell", "luonto": "nature",
     
-    # --- Lidé a rodina ---
-    "mies", "nainen", "lapsi", "poika", "tyttö", "vauva", "isä", "äiti", "veli", "sisko",
-    "poika", "tytär", "isoäiti", "isoisä", "serkku", "täti", "setä", "eno", "perhe", "suku",
-    "ystävä", "naapuri", "ihminen", "henkilö", "vieras", "isäntä", "emäntä", "vaimo", "mies", "pari",
+    # People & Family
+    "mies": "man", "nainen": "woman", "lapsi": "child", "poika": "boy", "tyttö": "girl",
+    "vauva": "baby", "isä": "father", "äiti": "mother", "veli": "brother", "sisko": "sister",
+    "tytär": "daughter", "isoäiti": "grandmother", "isoisä": "grandfather", "serkku": "cousin",
+    "täti": "aunt", "setä": "uncle (paternal)", "eno": "uncle (maternal)", "perhe": "family",
+    "suku": "relatives", "ystävä": "friend", "naapuri": "neighbor", "ihminen": "human",
+    "henkilö": "person", "vieras": "guest", "isäntä": "host", "emäntä": "hostess", "vaimo": "wife",
+    "pari": "couple",
     
-    # --- Tělo ---
-    "pää", "silmä", "korva", "nenä", "suu", "huuli", "hammas", "kieli", "kaula",
-    "kurkku", "olkapää", "käsivarsi", "käsi", "sormi", "kynsi", "rinta", "vatsa", "selkä", "jalka",
-    "polvi", "varvas", "iho", "luu", "veri", "sydän", "keuhko", "lihas", "naama",
+    # Body Parts
+    "pää": "head", "silmä": "eye", "korva": "ear", "nenä": "nose", "suu": "mouth",
+    "huuli": "lip", "hammas": "tooth", "kieli": "tongue", "kaula": "neck",
+    "kurkku": "throat", "olkapää": "shoulder", "käsivarsi": "arm", "käsi": "hand",
+    "sormi": "finger", "kynsi": "nail", "rinta": "chest", "vatsa": "stomach", "selkä": "back",
+    "jalka": "leg", "polvi": "knee", "varvas": "toe", "iho": "skin", "luu": "bone",
+    "veri": "blood", "sydän": "heart", "keuhko": "lung", "lihas": "muscle", "naama": "face",
     
-    # --- Dům a domácnost ---
-    "talo", "koti", "asunto", "huone", "keittiö", "kylpyhuone", "makuuhuone", "olohuone", "eteinen", "parveke",
-    "piha", "ovi", "ikkuna", "seinä", "katto", "lattia", "porras", "lukko", "avain", "pöytä",
-    "tuoli", "sänky", "sohva", "kaappi", "hylly", "lamppu", "matto", "verho", "peili", "taulu",
-    "kello", "radio", "televisio", "tietokone", "puhelin", "kone", "uuni", "hella", "kaappi", "allas",
+    # House & Household
+    "talo": "house", "koti": "home", "asunto": "apartment", "huone": "room", "keittiö": "kitchen",
+    "kylpyhuone": "bathroom", "makuuhuone": "bedroom", "olohuone": "living room", "eteinen": "hall",
+    "parveke": "balcony", "piha": "yard", "ovi": "door", "ikkuna": "window", "seinä": "wall",
+    "katto": "roof", "lattia": "floor", "porras": "stair", "lukko": "lock", "avain": "key",
+    "pöytä": "table", "tuoli": "chair", "sänky": "bed", "sohva": "sofa", "kaappi": "cabinet",
+    "hylly": "shelf", "lamppu": "lamp", "matto": "carpet", "verho": "curtain", "peili": "mirror",
+    "taulu": "picture", "kello": "clock", "radio": "radio", "televisio": "television",
+    "tietokone": "computer", "puhelin": "telephone", "kone": "machine", "uuni": "oven",
+    "hella": "stove", "allas": "basin",
     
-    # --- Kuchyně a jídlo ---
-    "ruoka", "juoma", "vesi", "maito", "kahvi", "tee", "mehu", "olut", "viini", "leipä",
-    "voi", "juusto", "liha", "kala", "kana", "muna", "makkara", "peruna", "riisi", "pasta",
-    "vihannes", "hedelmä", "omena", "banaani", "marja", "suola", "sokeri", "jauho", "öljy", "kastike",
-    "lautanen", "kulho", "lasi", "muki", "kuppi", "veitsi", "haarukka", "lusikka", "kattila", "pannu",
-    
-    # --- Oblečení ---
-    "vaate", "paita",  "hame", "mekko", "takki", "pipo", "hattu", "huivi", "käsine",
-    "sukka", "kenkä", "saapas", "alusvaate", "vyö", "solmio", "nappi", "tasku", "vetoketju", "sateenvarjo",
-    
-    # --- Doprava a město ---
-    "auto", "bussi", "juna", "lentokone", "laiva", "vene", "pyörä", "moottoripyörä", "tie", "katu",
-    "polku", "silta", "tunneli", "asema", "satama", "lentoke", "tori", "puisto", "kaupunki", "kylä",
-    "maa", "valtio", "raja", "keskusta", "kauppa", "pankki", "sairaala", "koulu", "kirkko", "tehdas",
-    "hotelli", "ravintola", "kahvila", "elokuvateatteri", "museo", "kirjasto", "teatteri", "poliisi", "posti", "apteekki",
-    
-    # --- Čas a kalendář ---
-    "aika", "hetki", "sekunti", "minuutti", "tunti", "päivä", "viikko", "kuukausi", "vuosi", "vuosisata",
-    "aamu", "päivä", "ilta", "yö", "aamupäivä", "iltapäivä", "keskiyö", "maanantai", "tiistai", "keskiviikko",
-    "torstai", "perjantai", "lauantai", "sunnuntai", "tammikuu", "helmikuu", "maaliskuu", "huhtikuu", "toukokuu", "kesäkuu",
-    "heinäkuu", "elokuu", "syyskuu", "lokakuu", "marraskuu", "joulukuu", "kevät", "kesä", "syys", "talvi",
-    
-    # --- Abstraktní a ostatní ---
-    "asia", "sana", "nimi", "luku", "numero", "väri", "muoto", "ääni", "valo", "pimeys",
-    "elämä", "kuolema", "onni", "rakkaus", "viha", "pelko", "ilo", "suru", "työ", "leikki",
-    "peli", "urheilu", "musiikki", "taide", "kirja", "lehti", "kuva", "elokuva", "uutinen", "tieto",
-    "ajatus", "mieli", "sielu", "voima", "valta", "laki", "oikeus", "raha", "hinta", "palkka",
-    "lahja", "ongelma", "vastaus", "kysymys", "syy", "seuraus", "tapa", "mahdollisuus", "virhe", "totuus",
-    
-    # --- Škola a práce ---
-    "opettaja", "oppilas", "luokka", "kynä", "paperi", "vihko", "laukku", "tehtävä", "koe", "arvosana",
-    "yliopisto", "kurssi", "ammatti", "johtaja", "työntekijä", "toimisto", "kokous", "asiakas", "projekti", "suunnitelma",
-    
-    # --- Materiály a předměty ---
-    "metalli", "rauta", "kulta", "hopea", "lasi", "muovi", "puu", "paperi", "kangas", "nahka",
-    "kivi", "tiili", "betoni", "roska", "jäte", "pöly", "savu", "tuli", "liekki", "hiili",
-    
-    # --- Další podstatná jména ---
-    "kone", "laite", "työkalu", "vasara", "saha", "naula", "ruuvi", "neula", "lanka",
-    "pallo", "lelu", "kortti", "raha", "kolikko", "seteli", "lompakko", "kassi", "pussi", "laatikko",
-    "pullo", "tölkki", "kansi", "pohja", "reuna", "pinta", "sisältö", "osa", "kappale", "ryhmä",
-    "joukko", "kansa", "kieli", "maa", "maailma", "avaruus", "planeetta", "tähti", "aurinko", "kuu",
-    "metsästys", "kalastus", "matka", "loma", "juhla", "joulu", "pääsiäinen", "syntymäpäivä",
-    "terveys", "tauti", "kipu", "lääke", "uni", "unelma", "muisto", "kokemus", "seikkailu", "tarina",
-    "runo", "laulu", "soitin", "kitara", "piano", "rumpu", "viulu", "huilu", "torvi", "ääni",
-    "melu", "hiljaisuus", "haju", "maku", "tunne", "kosketus", "näkö", "kuulo", "liike", "vauhti",
-    "suunta", "pohjoinen", "etelä", "itä", "länsi", "vasen", "oikea", "ylä", "ala",
-    "sisä", "ulko", "etu", "taka", "alku", "loppu", "reuna", "keskusta", "piste", "viiva",
-    "kulma", "ympyrä", "neliö", "pinta-ala", "pituus", "leveys", "korkeus", "paino", "määrä", "summa",
-    
-    # --- Přídavná jména (použitá jako podstatná jména nebo vlastnosti) ---
-    "hyvyys", "pahuus", "kauneus", "kalleus", "nopeus", "pituus", "leveys", "syvyys", "korkeus",
-    "viisaus", "tyhmyys", "rehellisyys", "rohkeus", "pelkuruus", "ystävyys", "vapaus", "rauha", "sota", "voitto",
-    "tappio", "vaara", "turva", "apu", "kiitos", "anteeksi", "tervehdys", "hyvästi", "onni", "menestys",
-    
-    # --- Různé ---
-    "paita", "hame", "takki", "hattu", "sukka", "kenkä", "saapas", "huivi", "vyö",
-    "sormus", "ketju", "kello",  "laukku", "reppu", "salkku", "matkalaukku", "sateenvarjo", "avain",
-    "lukko", "ovi", "ikkuna", "portti", "aita", "seinä", "katto", "lattia", "katto", "uuni",
-    "liesi", "allas", "hana", "suihku", "amme", "sauna", "kiuas", "löyly", "vihta", "vasta",
-    "mökki", "huvila", "kartano", "linna", "torni", "kirkko", "pappila", "koulu", "opisto", "lukio",
-    "yliopisto", "virasto", "tehdas", "paja", "halli", "varasto", "kauppa", "myymälä", "tori", "aukio",
-    "puisto", "puutarha", "pelto", "niitty", "laidun", "metsä", "viidakko", "aavikko", "saari", "luoto",
-    "vuori", "vaara", "kukkula", "laakso", "solu", "puro", "oja", "kanava", "koski", "putous",
-    "lähde", "kaivo", "lampi", "järvi", "selkä", "lahti", "salmi", "meri", "valtameri", "ranta",
-    "hiekka", "kivi", "kallio", "muta", "savu", "tuli", "hiili", "tuhka", "pöly", "ilma"
-]
+    # Kitchen & Food
+    "ruoka": "food", "juoma": "drink", "vesi": "water", "maito": "milk", "kahvi": "coffee",
+    "tee": "tea", "mehu": "juice", "olut": "beer", "viini": "wine", "leipä": "bread",
+    "voi": "butter", "juusto": "cheese", "liha": "meat", "kana": "chicken", "muna": "egg",
+    "makkara": "sausage", "peruna": "potato", "riisi": "rice", "pasta": "pasta",
+    "vihannes": "vegetable", "hedelmä": "fruit", "omena": "apple", "banaani": "banana",
+    "suola": "salt", "sokeri": "sugar", "jauho": "flour", "öljy": "oil", "kastike": "sauce",
+    "lautanen": "plate", "kulho": "bowl", "lasi": "glass", "muki": "mug", "kuppi": "cup",
+    "veitsi": "knife", "haarukka": "fork", "lusikka": "spoon", "kattila": "pot", "pannu": "pan",
+
+    # Transportation & City
+    "auto": "car", "bussi": "bus", "juna": "train", "lentokone": "airplane", "laiva": "ship",
+    "vene": "boat", "pyörä": "bicycle", "moottoripyörä": "motorcycle", "tie": "road", "katu": "street",
+    "polku": "path", "silta": "bridge", "tunneli": "tunnel", "asema": "station", "satama": "harbor",
+    "tori": "market", "puisto": "park", "kaupunki": "city", "kylä": "village", "maa": "country",
+    "valtio": "state", "raja": "border", "keskusta": "center", "kauppa": "shop", "pankki": "bank",
+    "sairaala": "hospital", "koulu": "school", "kirkko": "church", "tehdas": "factory",
+    "hotelli": "hotel", "ravintola": "restaurant", "kahvila": "cafe", "museo": "museum",
+    "kirjasto": "library", "teatteri": "theater", "poliisi": "police", "posti": "post", "apteekki": "pharmacy",
+
+    # Time & Abstract
+    "aika": "time", "hetki": "moment", "sekunti": "second", "minuutti": "minute", "tunti": "hour",
+    "päivä": "day", "viikko": "week", "kuukausi": "month", "vuosi": "year", "vuosisata": "century",
+    "aamu": "morning", "ilta": "evening", "yö": "night", "maanantai": "Monday", "tiistai": "Tuesday",
+    "keskiviikko": "Wednesday", "torstai": "Thursday", "perjantai": "Friday", "lauantai": "Saturday",
+    "sunnuntai": "Sunday", "kevät": "spring", "kesä": "summer", "syys": "autumn", "talvi": "winter",
+    "asia": "thing", "sana": "word", "nimi": "name", "numero": "number", "väri": "color",
+    "ääni": "sound", "valo": "light", "elämä": "life", "onni": "happiness", "rakkaus": "love",
+    "työ": "work", "raha": "money", "ongelma": "problem", "vastaus": "answer", "kysymys": "question",
+}
+
 def get_first_vowel_in_long_word(word):
     vowels = "aeiouyäö"
     last_five = word[-5:]
@@ -771,6 +752,7 @@ if "state" not in st.session_state:
         "quiz": [],
         "to_repair": [],
         "mode": "Mixed",
+        "show_english": False,
         "feedback": None,
         "correct_answer": "",
         "input_key_suffix": 0,
@@ -796,47 +778,26 @@ elif s["feedback"] == "wrong":
     border_color = "#F44336"
     bg_color = "#FFEBEE"
 
+st.markdown("""
+    <style>
+    /* 1. Hide the specific 'chain' icon container */
+    [data-testid="stHeaderActionElements"] {
+        display: none !important;
+    }
+    
+    /* 2. Hide older versions of the anchor link */
+    .header-anchor {
+        display: none !important;
+    }
 
-# --- 2. DYNAMIC CSS ---
-# ... (ponechte definice barev border_color a bg_color) ...
-
-st.markdown(f"""
-<style>
-/* 1. Nastavení pozadí pro input i textovou oblast */
-div[data-baseweb="base-input"], 
-div[data-baseweb="textarea"] {{
-    border: 2px solid {border_color} !important;
-    border-radius: 8px !important;
-    background-color: {bg_color} !important;
-}}
-
-/* 2. Oprava barvy textu uvnitř INPUTU (hra) */
-div[data-baseweb="input"] input {{
-    color: #1E1E1E !important;
-    -webkit-text-fill-color: #1E1E1E !important;
-}}
-
-/* 3. Oprava barvy textu uvnitř TEXT_AREA (menu - Custom List) */
-div[data-baseweb="textarea"] textarea {{
-    color: #1E1E1E !important;
-    -webkit-text-fill-color: #1E1E1E !important;
-    background-color: transparent !important;
-}}
-
-/* 4. Viditelnost placeholderu pro oba prvky */
-div[data-baseweb="input"] input::placeholder,
-div[data-baseweb="textarea"] textarea::placeholder {{
-    color: #555555 !important;
-    opacity: 1; /* Aby nebyl moc průhledný */
-}}
-
-/* Odstranění zbytků původního stylu */
-div[data-baseweb="input"], div[data-baseweb="textarea"] {{ 
-    border: none !important; 
-    background-color: transparent !important; 
-}}
-[data-testid="stTextInput"] button {{ display: none !important; }}
-</style>
+    /* 3. Force the H1 to ignore any reserved space on the right */
+    h1 {
+        text-align: center !important;
+        width: 100% !important;
+        padding-right: 0 !important;
+        margin-right: 0 !important;
+    }
+    </style>
 """, unsafe_allow_html=True)
 
 st.markdown("""
@@ -964,6 +925,8 @@ def next_question():
     s["idx"] += 1
     s["feedback"] = None
     s["missed_current"] = False
+    s["show_english"] = False
+    s["show_reveal"] = False
     s["input_key_suffix"] += 1
     
     if s["idx"] >= len(s["quiz"]):
@@ -973,16 +936,26 @@ def next_question():
             s["view"] = "results" # Finish quiz -> Results
     st.rerun()
 # --- 4. LOGIC HANDLERS (Updated for Custom Mode) ---
-def start_quiz(word_list, num, mode):
-    # Ensure we don't try to sample more words than available
+def start_quiz(word_source, num, mode):
+    # Pokud je word_source slovník (WORDS), vezmeme jen jeho klíče (finská slova)
+    if isinstance(word_source, dict):
+        word_list = list(word_source.keys())
+    else:
+        word_list = list(word_source) # Pro Custom List (vstup z text_area)
+
+    # Zamezíme chybě, pokud chce uživatel víc slov, než máme
     sample_size = min(num, len(word_list))
     selected = random.sample(word_list, sample_size)
     
+    # Vytvoření seznamu dvojic (slovo, pád) pro kvíz
     s["quiz"] = [(w, mode if mode != "Mixed" else random.choice(["Singular", "Plural"])) for w in selected]
+    
+    # Resetování stavů
     s["to_repair"] = []
     s["idx"], s["score"]["correct"], s["score"]["wrong"] = 0, 0, 0
     s["view"], s["feedback"] = "game", None
-    s["repair_initialized"] = False # Reset heart system
+    s["show_english"] = False  # Důležité pro animaci
+    s["repair_initialized"] = False
     st.rerun()
 
 # --- 5. VIEWS ---
@@ -1088,23 +1061,74 @@ elif s["view"] == "game":
     st.progress(progress)
     st.markdown(f"<p class='centered-text' style='color: gray; margin-top: -12px; margin-bottom: 5px; font-size: 0.8rem;'>{s['idx']} / {len(s['quiz'])} completed</p>", unsafe_allow_html=True)
     
-    # 3. Target Word Card
-    st.markdown('<div style="margin-top: -25px;">', unsafe_allow_html=True)
-    card_placeholder = st.empty()
-
-    display_text = word
-    text_color = "#2c3e50"
+    # 3. Target Word Card - STABILNÍ VERZE (Tlačítko pod kartou)
+    word_fi = word
+    word_en = WORDS.get(word, "Translation missing")
     
-    if s.get("show_reveal"):
-        display_text = s['correct_answer']
-        text_color = "#11a20a"  # Your requested Green for revealed answer
+    # Logika textu na kartě pro "Show Answer"
+    card_front_text = word_fi
+    card_front_label = "FINNISH"
+    card_front_color = "#2c3e50"
 
-    with card_placeholder.container(border=True):
-        st.markdown(f"""
-            <div class="centered-text" style="margin-top: -5px; margin-bottom: 10px;">
-                <h1 style='color:{text_color}; font-size: 5rem; margin: 0;'>{display_text}</h1>
-            </div>
-        """, unsafe_allow_html=True)
+    if s.get("show_reveal"):
+        card_front_text = s.get('correct_answer', "---")
+        card_front_label = "CORRECT"
+        card_front_color = "#11a20a"
+
+    # ČISTÉ CSS PRO KARTU (Bez triků s neviditelností)
+    st.markdown(f"""
+    <style>
+    .flip-card {{ 
+        background-color: transparent; 
+        width: 100%; 
+        height: 200px; 
+        perspective: 1000px; 
+        margin-bottom: 10px;
+    }}
+    .flip-card-inner {{
+      position: relative; width: 100%; height: 100%; text-align: center; 
+      transition: transform 0.6s; transform-style: preserve-3d;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-radius: 15px; border: 1px solid #ddd;
+      transform: {"rotateY(180deg)" if s.get("show_english") else "rotateY(0deg)"};
+    }}
+    .face-front, .face-back {{
+      position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+      display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 15px;
+    }}
+    .face-front {{ background-color: white; color: {card_front_color}; }}
+    .face-back {{ background-color: #f8f9fa; color: #9b59b6; transform: rotateY(180deg); }}
+    
+    /* Styl pro tlačítko Flip, aby vypadalo lépe */
+    div.stButton > button[key="flip_btn_visible"] {{
+        background-color: #f0f2f6 !important;
+        border: 1px solid #d0d0d0 !important;
+        color: #555 !important;
+        font-weight: bold !important;
+    }}
+    </style>
+    """, unsafe_allow_html=True)
+
+    # A. Vykreslení vizuální karty
+    st.markdown(f"""
+    <div class="flip-card">
+      <div class="flip-card-inner">
+        <div class="face-front">
+          <p style="color: gray; font-size: 0.8rem; margin: 0;">{card_front_label}</p>
+          <h1 style="font-size: 3.5rem; margin: 0; font-weight: 800;">{card_front_text}</h1>
+        </div>
+        <div class="face-back">
+          <p style="color: gray; font-size: 0.8rem; margin: 0;">ENGLISH</p>
+          <h1 style="font-size: 3.5rem; margin: 0; font-weight: 800;">{word_en}</h1>
+        </div>
+      </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # B. Viditelné tlačítko Flip PŘÍMO POD KARTOU
+    if st.button("Flip Card", key="flip_btn_visible", use_container_width=True):
+        s["show_english"] = not s.get("show_english", False)
+        st.rerun()
+
 
     # 4. Input Field (Hides when revealing)
     input_placeholder = st.empty()
@@ -1126,16 +1150,27 @@ elif s["view"] == "game":
         next_question()
         st.rerun()
 
-    # 6. Wrong / Show Answer Logic
     elif s["feedback"] == "wrong" and not s.get("show_reveal"):
-        st.error("❌ Not quite right.")
-        col_l, col_btn, col_r = st.columns([1, 1.5, 1])
-        with col_btn:
-            if st.button("Show answer", use_container_width=True):
-                s["show_reveal"] = True
-                # Increment wrong score ONLY ONCE when button is first pressed
-                s["score"]["wrong"] += 1 
-                st.rerun()
+            if not s.get("wrong_sound_played"):
+                #play_sound("wrong")
+                s["wrong_sound_played"] = True
+                
+            st.error("❌ Not quite right.")
+            
+            col_l, col_btn, col_r = st.columns([1, 1.5, 1])
+            with col_btn:
+                if st.button("Show answer", use_container_width=True):
+                    # --- OPRAVA: PŘIČTENÍ CHYBY ---
+                    s["score"]["wrong"] += 1 
+                    
+                    # Uložíme do seznamu k opravě, pokud tam ještě není
+                    word_to_check, case_to_check = s["quiz"][s["idx"]]
+                    if (word_to_check, case_to_check) not in s["to_repair"]:
+                        s["to_repair"].append((word_to_check, case_to_check))
+                    
+                    s["show_reveal"] = True
+                    s["correct_answer"] = partitive_sg(word_to_check) if case_to_check in ["SG", "Singular"] else partitive_pl(word_to_check)
+                    st.rerun()
 
     # 7. Reveal State: Next Button + 4s Timer
     if s.get("show_reveal"):
@@ -1260,8 +1295,11 @@ elif s["view"] == "repair":
         input_key = f"in_{s['input_key_suffix']}"
         st.text_input("Answer", key=input_key, on_change=handle_submit, label_visibility="collapsed", placeholder="Type the correct form...")
 
+        correct_sound = "correct_sound.mp3"
+        wrong_sound = "wrong_sound.mp3"
            # 6. Feedback Logic (Lose a heart on EVERY wrong submission)
         if s["feedback"] == "correct":
+            st.audio(correct_sound, format="audio/mpeg", autoplay=True)
             st.success("✅ Correct!")
             time.sleep(1.0)
             
@@ -1275,6 +1313,7 @@ elif s["view"] == "repair":
             # Check if this is a NEW wrong submission (using the input key suffix)
             # This ensures 1 submit = 1 heart lost, even if Streamlit reruns
             if not s.get("last_processed_submit") == s["input_key_suffix"]:
+                st.audio(wrong_sound, format="audio/mpeg", autoplay=True)
                 s["lives"] -= 1
                 s["last_processed_submit"] = s["input_key_suffix"]
                 st.rerun() # Immediate visual update of hearts
