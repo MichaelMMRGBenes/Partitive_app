@@ -218,6 +218,12 @@ def partitive_sg(word:str) -> str:
             word += "ä"
         else:
             word += "a"
+    #lattia -> lattiaa, miniä -> miniää, teknologia -> teknologiaa 
+    elif word[-2:] == "ia":
+        word =+ "a"
+
+    elif word[-2:] == "iä":
+        word =+ "ä"
 
     elif word[-2:] == "ee":
         word += "tä"
