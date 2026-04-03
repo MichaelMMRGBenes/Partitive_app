@@ -151,7 +151,7 @@ WORDS = {
     "satama": "harbor", "tori": "market", "puisto": "park", "kaupunki": "city", "kylä": "village",
     "kauppa": "shop", "pankki": "bank", "sairaala": "hospital", "koulu": "school",
     "kirkko": "church", "tehdas": "factory", "hotelli": "hotel", "ravintola": "restaurant",
-    "kahvila": "cafe", "museo": "museum", "kirjasto": "library", "teatteri": "theater",
+    "kahvila": "cafe", "museo": "museum", "teatteri": "theater",
     "apteekki": "pharmacy", "lentokenttä": "airport", "laituri": "platform", "rekka": "truck",
 
     # --- WORK, MEDIA & EDUCATION ---
@@ -866,6 +866,10 @@ def partitive_pl(word) -> str:
 
     elif word[-4:] in ("usta", "uusa", "itsa", "tera") and syllables >= 3:
         return [word[:-1] + "oita", word[:-1] + "oja"]
+    
+    #lipasto, kirjasto -> lipastoita, lipastoja
+    elif word[-3:] in ("sto") and syllables >= 3:
+        return [word + "ita", word + "ja"]
 
     elif word[-3:] == "yhe":
         return [word[:-1] + "keitä"]
@@ -1947,7 +1951,7 @@ elif s["view"] == "repair":
     with col_back:
         if st.button("Quit", help="Return to Menu", use_container_width=True):
             s["view"] = "menu"
-            s["repair_initialized"] = False # Reset flag so hearts reset next time
+            s["repair_initialized"] = False
             st.rerun()
 
     # 3. Hearts Display
@@ -1999,13 +2003,8 @@ elif s["view"] == "repair":
             s["last_processed_submit"] = s["input_key_suffix"]
             s["feedback"] = None
             
-            # 4. Pauza, aby dozněl zvuk a uživatel viděl chybu
             time.sleep(1.0)
-            
-            # 5. Refresh pro aktualizaci UI (srdíček v sidebaru apod.)
             st.rerun()
-            
-                
-            
+
             if s["lives"] <= 0:
                 st.rerun() 
