@@ -445,7 +445,7 @@ WORDS = {
     "panssarivaunu": "tank", "sukellusvene": "submarine", "laskuvarjo": "parachute",
     "kuumailmapallo": "hot air balloon", "avaruusalus": "spaceship", "raketti": "rocket",
     "komeetta": "comet", "asteroidi": "asteroid",
-    "galaksi": "galaxy", "sumu": "nebula", "tähdenlento": "shooting star"
+    "galaksi": "galaxy", "sumu": "nebula", "tähdenlento": "shooting star", "lohikäärme":"dragon", "velho":"wizard"
 }
 
 def get_first_vowel_in_long_word(word):
