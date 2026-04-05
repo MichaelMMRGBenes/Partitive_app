@@ -310,3 +310,6 @@ keidas
 pippeli
 seuraus
 kokous
+tiistai
+kalvosinnappi
+perjantai

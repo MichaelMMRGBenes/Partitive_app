@@ -60,12 +60,12 @@ def partitive_pl(word) -> str:
 #All thanks to my beautiful girlfriend Maria that helped me with this program <3    
     #koe, rikas, mies, puhelin
     #Leimu contribution# - näppäin <3 saippuakauppias
-    exceptions = {"hana":"hanoja", "kaappi":"kaappeja", "maailma":"maailmoja", "keskusta":"keskustoja", "sana":"sanoja","etelä":"eteliä","jänis":"jäniksiä","viikko":"viikkoja","kiuas":"kiukaita","suola":"suoloja","veli":"veljiä","ihana":"ihania","näppäin":"näppäimiä","muna":"munia","appelsiini":"appelsiineja", "voi":"voita","hidas":"hitaita", "laite":"laitteita","kausi": "kausia", "taide":"taiteita","laki":"lakeja","hotelli":"hotelleja","pullo":"pulloja","vuoro":"vuoroja","hana":"hanoja","verkko":"verkkoja","lahje":"lahkeita","kirkko":"kirkkoja","omena":"omenoita","ien":"ikeniä","koe":"kokeita", "rikas":"rikkaita", "mies":"miehiä", "puhelin":"puhelimia", "tytär":"tyttäriä", "kannel":"kanteleita", "sävel":"säveliä", "kyynel":"kyyneleitä", "sammal":"sammaleita", "taival":"taipaleita", "askel":"askeleita", "nivel":"niveliä","ommel":"ompeleita", "tanner":"tantereita", "manner":"mantereita", "seitsemän":"seitsemiä", "jääkiekko":"jääkiekkoja", "matala":"matalia","ihana":"ihania", "ahkera":"ahkeria", "sako":"sakkoja", "musiikki":"musiikkeja"}
+    exceptions = {"kukka": "kukkia","tekijä":"tekijöitä","peli":"peleja","pakka":"pakkoja","vuoro":"vuoroja","hana":"hanoja", "kaappi":"kaappeja", "maailma":"maailmoja", "keskusta":"keskustoja", "sana":"sanoja","etelä":"eteliä","jänis":"jäniksiä","viikko":"viikkoja","kiuas":"kiukaita","suola":"suoloja","veli":"veljiä","ihana":"ihania","näppäin":"näppäimiä","muna":"munia","appelsiini":"appelsiineja", "voi":"voita","hidas":"hitaita", "laite":"laitteita","kausi": "kausia", "taide":"taiteita","laki":"lakeja","hotelli":"hotelleja","pullo":"pulloja","vuoro":"vuoroja","hana":"hanoja","verkko":"verkkoja","lahje":"lahkeita","kirkko":"kirkkoja","omena":"omenoita","ien":"ikeniä","koe":"kokeita", "rikas":"rikkaita", "mies":"miehiä", "puhelin":"puhelimia", "tytär":"tyttäriä", "kannel":"kanteleita", "sävel":"säveliä", "kyynel":"kyyneleitä", "sammal":"sammaleita", "taival":"taipaleita", "askel":"askeleita", "nivel":"niveliä","ommel":"ompeleita", "tanner":"tantereita", "manner":"mantereita", "seitsemän":"seitsemiä", "jääkiekko":"jääkiekkoja", "matala":"matalia","ihana":"ihania", "ahkera":"ahkeria", "sako":"sakkoja", "musiikki":"musiikkeja"}
     
     i_to_e = ["alpi","uni", "appi","arki","arpi","hanhi","hanki","happi","hapsi","hauki","heisi","helmi","henki","hetki","hiili","hiiri","hiisi","hiki",
 "hirsi","hirvi","huoli","huuli","impi","joki","jouhi","jousi","juoni","juuri","jälki","jälsi","järki","järvi","Jääski","kaali","kaari","kaihi","kaikki","kaksi",
 "kampi","kanki","kansi","karhi","kaski","kieli","kiiski","kilpi","kirsi","kivi","koipi","korpi","korsi","koski","kuori","kurki","kusi",
-"kuusi","kuusi","kylki","Kymi","kynsi","käki","kärki","käsi","köysi","lahti","laki","lampi","lapsi","lehti","lempi","leski","liemi","liesi",
+"kuusi","kylki","Kymi","kynsi","käki","kärki","käsi","köysi","lahti","laki","lampi","lapsi","lehti","lempi","leski","liemi","liesi",
 "lohi","loimi","Louhi","lovi","lumi","luomi","länki","länsi","meri","mesi","mieli","moni","mäki","niemi","niini","nimi","noki","nummi","nuoli",
 "nuori","nurmi","närhi","onki","onni","orsi","ovi","paasi","parsi","parvi","peitsi","pieli","pieni","piki","pilvi","polvi","ponsi",
 "poski","povi","puoli","pursi","putki","pälvi","reki","reisi","retki","riihi","ripsi","rupi","ruuhi","saari","saarni",
@@ -77,16 +77,17 @@ def partitive_pl(word) -> str:
 
 
     for item in exceptions:
-        if len(item) > 3 and item in word[-len(item):]:
+        if len(item) >= 4 and len(word) >= 7 and item in word[-len(item):]:
             word = word[:-len(item)] + exceptions[item]
             return word
+        
         else:
             if item == word:
                 word = exceptions[item]
                 return word
 
     for item in i_to_e:
-        if len(word) > 5:
+        if len(word) > 7:
             if item == word[-len(item):]:
                 if any(vowel in word[-5:] for vowel in changing_vowels) or any(vowel in word[-5:]  for vowel in neutral_vowels) and not any(vowel in word[-4:] for vowel in neutralising_vowels):
                     word += "ä"
@@ -100,14 +101,18 @@ def partitive_pl(word) -> str:
                 else:
                     word += "a"
                 return word
-    
+
+
 
         #mansikka/
     if word[-3:] in ("kka","kko") and syllables >= 3 and not any(vowel in word for vowel in changing_vowels):
         word = word[:-2] + "oita"
 
-    elif word[-3:] == "hai":
+    elif word[-3:] in ("hai", "tai"):
         word += "ta"
+
+    elif word[-3:] == "mal":
+        word += "ia"    
 
 
     
@@ -151,16 +156,13 @@ def partitive_pl(word) -> str:
 
   
 
-
     
 
         #mukava, matala
-    elif word[-3:] in ("ala", "ava", "isa", "era") and syllables == 3 and word[-4:] != "aala":
+    elif (word[-3:] in ("ala", "ava", "isa", "era") and syllables == 3) and word[-4:] != "aala":
         word = word[:-1] + "ia"
 
 
-
-       
         #ravintola
     elif word[-2:] in ("la", "ra", "na", "ia") and syllables >= 3 and not any(vowel in word for vowel in changing_vowels):
         word = word[:-1] + "oita"
@@ -171,8 +173,6 @@ def partitive_pl(word) -> str:
 
     elif word[-3:] == "ijä" and syllables >= 3:
         word = word[:-1] + "äitä"
-
-
 
         #korkea
     elif word[-2:] == "ea" and syllables >= 3:
@@ -197,6 +197,8 @@ def partitive_pl(word) -> str:
         #kännykkä
     elif word[-3:] in ("kkä", "kkö") and syllables >= 3:
         word = word[:-2] + "öitä"
+    
+
 
         # o / u
         #and syllables == 2 
@@ -342,6 +344,12 @@ def partitive_pl(word) -> str:
         else:
             word = word[:-1] + "mia"
 
+    elif word[-4:] == "stin":
+        if any(vowel in word for vowel in changing_vowels) or any(vowel in word for vowel in neutral_vowels) and not any(vowel in word for vowel in neutralising_vowels):
+            word = word[:-1] + "miä"
+        else:
+            word = word[:-1] + "mia"
+
 
     elif word[-3:] == "tin":
         if any(vowel in word for vowel in changing_vowels) or any(vowel in word for vowel in neutral_vowels) and not any(vowel in word for vowel in neutralising_vowels):
@@ -386,10 +394,17 @@ def partitive_pl(word) -> str:
     #sopraano
     elif word[-2:] == "no" and syllables >= 3:
         word += "ja"
+    #sammal
+
+
 
     #kaveri
     elif word[-2:] == "ri" and syllables >= 3:
-        word = word[:-1] + "eita"
+        if any(vowel in word for vowel in changing_vowels) or any(vowel in word for vowel in neutral_vowels) and not any(vowel in word for vowel in neutralising_vowels):
+           word = word[:-1] + "eitä"
+        else:
+            word = word[:-1] + "eita"
+
 
     elif word[-2:] == "in":
         if any(vowel in word for vowel in changing_vowels) or any(vowel in word for vowel in neutral_vowels) and not any(vowel in word for vowel in neutralising_vowels):
@@ -417,10 +432,16 @@ def partitive_pl(word) -> str:
 
     #pankki        
     elif word[-1] == "i" and word not in i_to_e:
-        if any(vowel in word[-5:] for vowel in changing_vowels) or any(vowel in word[-5:] for vowel in neutral_vowels) and not any(vowel in word[-8:] for vowel in neutralising_vowels):
-            word = word[:-1] + "ejä"
+        if len(word) > 7:
+            if any(vowel in word[-len(word)//2:] for vowel in changing_vowels) or any(vowel in word[-len(word)//2:] for vowel in neutral_vowels) and not any(vowel in word[-len(word)//2:] for vowel in neutralising_vowels):
+                word = word[:-1] + "ejä"
+            else:
+                word = word[:-1] + "eja"
         else:
-            word = word[:-1] + "eja"
+            if any(vowel in word for vowel in changing_vowels) or any(vowel in word for vowel in neutral_vowels) and not any(vowel in word for vowel in neutralising_vowels):
+                word = word[:-1] + "ejä"
+            else:
+                word = word[:-1] + "eja"
 
         #I to E, need to work on 
     #All thanks to my beautiful girlfriend Maria that helped me with this program <3
@@ -452,6 +473,9 @@ def partitive_pl(word) -> str:
 
     elif word[-2:] == "as":
         word = word[:-1] + "ita"
+    
+    elif word[-2:] == "äs":
+        word = word[:-1] + "itä"
               
 
 
@@ -460,7 +484,7 @@ def partitive_pl(word) -> str:
     return word
 
 def partitive_sg(word:str) -> str:
-    exceptions = {"kokous":"kokousta", "vastaus":"vastausta","kuvaus":"kuvausta", "esitys":"esitystä", "ajatus":"ajatusta", "seuraus":"seurausta", "tulos":"tulosta", "kysymys":"kysymystä", "kaappi":"kaappia","penkki":"penkkiä","maalaus":"maalausta","koti":"kotia","historia":"historiaa", "musiikki":"musiikkia","laki":"lakia","appelsiini":"appelsiinia", "suurin":"suurimpaa", "vesi":"vettä", "kieli":"kieltä","kansi":"kantta", "kausi":"kautta", "viini": "viiniä","vastaus":"vastausta",
+    exceptions = {"krokotiili":"krokotiilia","arkkitehti":"arkkitehtia","putous":"putousta","kokous":"kokousta", "vastaus":"vastausta","kuvaus":"kuvausta", "esitys":"esitystä", "ajatus":"ajatusta", "seuraus":"seurausta", "tulos":"tulosta", "kysymys":"kysymystä", "kaappi":"kaappia","penkki":"penkkiä","maalaus":"maalausta","koti":"kotia","historia":"historiaa", "musiikki":"musiikkia","laki":"lakia","appelsiini":"appelsiinia", "suurin":"suurimpaa", "vesi":"vettä", "kieli":"kieltä","kansi":"kantta", "kausi":"kautta", "viini": "viiniä","vastaus":"vastausta",
                   "jälsi": "jälttä", "virsi":"virttä", "yksiö":"yksiötä","työhuone":"työhuonetta","ilmoitus":"ilmoitusta", "päätös":"päätöstä","muutos":"muutosta",
                   "veitsi": "veistä", "suuri":"suurta", "suurin":"suurimpaa","mies":"miestä",
                     "seitsemän":"seitsemää", "vasen":"vasempaa", "kivi":"kiveä", "käsi":"kättä", "veli":"veljeä", "lumi":"lunta",
@@ -486,73 +510,144 @@ def partitive_sg(word:str) -> str:
     neutral_vowels = "ei"
     neutralising_vowels = "aou"
     changing_vowels = "äyö"
+    #for item in exceptions: old version
+    #    if item in word[-len(item):]:
+    #        word = word[:-len(item)] + exceptions[item]
+    #        return word    
+
+
 
     #vesi -> vetta, exceptions
     #if len(word) >= len(min(exceptions, key=len)):
     for item in exceptions:
-        if item in word[-len(item):]:
+        if len(item) >= 4 and len(word) > 7 and item in word[-len(item):]:
             word = word[:-len(item)] + exceptions[item]
             return word
+        else:
+            if item == word:
+                word = exceptions[item]
+                return word
     
     #I to E, need to work on 
     for item in i_to_e:
-        if item == word[-len(item):]:
+        if len(word) > 7 and len(item) >= 4:
+            if item == word[-len(item):]:
             # usi -> usta
-            if word[-3:] == "usi":
-                if any(vowel in word for vowel in changing_vowels) or any(vowel in word for vowel in neutral_vowels) and not any(vowel in word for vowel in neutralising_vowels):
-                    word = word[:-1] +"tä"
-                else:
-                    word = word[:-1] + "ta" #tä
+                if word[-3:] == "usi":
+                    if any(vowel in word for vowel in changing_vowels) or any(vowel in word for vowel in neutral_vowels) and not any(vowel in word for vowel in neutralising_vowels):
+                        word = word[:-1] +"tä"
+                    else:
+                        word = word[:-1] + "ta" #tä
 
-            # ni -> nta/ntä
-            elif word[-2:] == "ni":
-                if any(vowel in word for vowel in changing_vowels) or any(vowel in word for vowel in neutral_vowels) and not any(vowel in word for vowel in neutralising_vowels):
-                    word = word[:-1] + "tä"
-                else:
-                    word = word[:-1] +"ta" 
+                # ni -> nta/ntä
+                elif word[-2:] == "ni":
+                    if any(vowel in word for vowel in changing_vowels) or any(vowel in word for vowel in neutral_vowels) and not any(vowel in word for vowel in neutralising_vowels):
+                        word = word[:-1] + "tä"
+                    else:
+                        word = word[:-1] +"ta" 
 
-            # ri -> rtä
-            elif word[-2:] == "ri":
-                if any(vowel in word for vowel in changing_vowels) or any(vowel in word for vowel in neutral_vowels) and not any(vowel in word for vowel in neutralising_vowels):
-                    word = word[:-1] +"tä"
-                else:
-                    word = word[:-1] +"ta" #tä
+                # ri -> rtä
+                elif word[-2:] == "ri":
+                    if any(vowel in word for vowel in changing_vowels) or any(vowel in word for vowel in neutral_vowels) and not any(vowel in word for vowel in neutralising_vowels):
+                        word = word[:-1] +"tä"
+                    else:
+                        word = word[:-1] +"ta" #tä
 
-            # hi -> hta 
-            elif word[-2:] == "hi":            
-                if any(vowel in word for vowel in changing_vowels) or any(vowel in word for vowel in neutral_vowels) and not any(vowel in word for vowel in neutralising_vowels):
-                    word = word[:-1] +"tä"
-                else:
-                    word = word[:-1] +"ta" #tä
-            #siili, kaali
-            elif word[-4:] in ("iili", "aali"):
-                if "a" in word[-4:]:
-                    word += "a"
-                else:
-                    word += "ä"
-            # li -> ltä
-            elif word[-2:] == "li":
-                if any(vowel in word for vowel in changing_vowels) or any(vowel in word for vowel in neutral_vowels) and not any(vowel in word for vowel in neutralising_vowels):
-                    word = word[:-1] +"tä"
-                else:
-                    word = word[:-1] +"ta" #tä
+                # hi -> hta 
+                elif word[-2:] == "hi":            
+                    if any(vowel in word for vowel in changing_vowels) or any(vowel in word for vowel in neutral_vowels) and not any(vowel in word for vowel in neutralising_vowels):
+                        word = word[:-1] +"tä"
+                    else:
+                        word = word[:-1] +"ta" #tä
+                #siili, kaali
+                elif word[-4:] in ("iili", "aali"):
+                    if "a" in word[-4:]:
+                        word += "a"
+                    else:
+                        word += "ä"
+                # li -> ltä
+                elif word[-2:] == "li":
+                    if any(vowel in word for vowel in changing_vowels) or any(vowel in word for vowel in neutral_vowels) and not any(vowel in word for vowel in neutralising_vowels):
+                        word = word[:-1] +"tä"
+                    else:
+                        word = word[:-1] +"ta" #tä
 
-            # si -> ttä
-            elif word[-2:] == "si":
-                if any(vowel in word for vowel in changing_vowels) or any(vowel in word for vowel in neutral_vowels) and not any(vowel in word for vowel in neutralising_vowels):
-                    word = word[:-2] +"ttä"
-                else:
-                    word = word[:-2] +"tta" # checknout to tä
+                # si -> ttä
+                elif word[-2:] == "si":
+                    if any(vowel in word[-5:] for vowel in changing_vowels) or any(vowel in word for vowel in neutral_vowels) and not any(vowel in word for vowel in neutralising_vowels):
+                        word = word[:-2] +"ttä"
+                    else:
+                        word = word[:-2] +"tta" # checknout to tä
 
-            #i -> e + a/ä
-            else:
-                if any(vowel in word[-5:] for vowel in changing_vowels) or any(vowel in word[-5:] for vowel in neutral_vowels) and not any(vowel in word[-5:] for vowel in neutralising_vowels):
-                    word = word[:-1] +"eä"
+                #i -> e + a/ä
                 else:
-                    word = word[:-1] +"ea"
+                    if any(vowel in word[-5:] for vowel in changing_vowels) or any(vowel in word[-5:] for vowel in neutral_vowels) and not any(vowel in word[-5:] for vowel in neutralising_vowels):
+                        word = word[:-1] +"eä"
+                    else:
+                        word = word[:-1] +"ea"
 
-            return word
-        
+                return word
+        else:
+            if item == word:
+                if word[-3:] == "usi":
+                    if any(vowel in word for vowel in changing_vowels) or any(vowel in word for vowel in neutral_vowels) and not any(vowel in word for vowel in neutralising_vowels):
+                        word = word[:-1] +"tä"
+                    else:
+                        word = word[:-1] + "ta" #tä
+
+                # ni -> nta/ntä
+                elif word[-2:] == "ni":
+                    if any(vowel in word for vowel in changing_vowels) or any(vowel in word for vowel in neutral_vowels) and not any(vowel in word for vowel in neutralising_vowels):
+                        word = word[:-1] + "tä"
+                    else:
+                        word = word[:-1] +"ta" 
+
+                # ri -> rtä
+                elif word[-2:] == "ri":
+                    if any(vowel in word for vowel in changing_vowels) or any(vowel in word for vowel in neutral_vowels) and not any(vowel in word for vowel in neutralising_vowels):
+                        word = word[:-1] +"tä"
+                    else:
+                        word = word[:-1] +"ta" #tä
+                #hanhi -> hanhea
+                elif word[-3:] == "nhi":            
+                    if any(vowel in word for vowel in changing_vowels) or any(vowel in word for vowel in neutral_vowels) and not any(vowel in word for vowel in neutralising_vowels):
+                        word = word[:-1] +"eä"
+                    else:
+                        word = word[:-1] +"ea" #tä                
+                # hi -> hta 
+                elif word[-2:] == "hi":            
+                    if any(vowel in word for vowel in changing_vowels) or any(vowel in word for vowel in neutral_vowels) and not any(vowel in word for vowel in neutralising_vowels):
+                        word = word[:-1] +"tä"
+                    else:
+                        word = word[:-1] +"ta" #tä
+                #siili, kaali
+                elif word[-4:] in ("iili", "aali"):
+                    if "a" in word[-4:]:
+                        word += "a"
+                    else:
+                        word += "ä"
+                # li -> ltä
+                elif word[-2:] == "li":
+                    if any(vowel in word for vowel in changing_vowels) or any(vowel in word for vowel in neutral_vowels) and not any(vowel in word for vowel in neutralising_vowels):
+                        word = word[:-1] +"tä"
+                    else:
+                        word = word[:-1] +"ta" #tä
+
+                # si -> ttä
+                elif word[-2:] == "si":
+                    if any(vowel in word for vowel in changing_vowels) or any(vowel in word for vowel in neutral_vowels) and not any(vowel in word for vowel in neutralising_vowels):
+                        word = word[:-2] +"ttä"
+                    else:
+                        word = word[:-2] +"tta" # checknout to tä
+
+                #i -> e + a/ä
+                else:
+                    if any(vowel in word[-5:] for vowel in changing_vowels) or any(vowel in word[-5:] for vowel in neutral_vowels) and not any(vowel in word[-5:] for vowel in neutralising_vowels):
+                        word = word[:-1] +"eä"
+                    else:
+                        word = word[:-1] +"ea"
+
+                return word
 
     #nalle
     if word[-3:] == "lle":
@@ -560,6 +655,9 @@ def partitive_sg(word:str) -> str:
             word += "ä"
         else:
             word += "a"
+
+    elif word[-2:] == "ia":
+        word += "a"
 
     elif word[-2:] == "ee":
         word += "tä"
@@ -583,11 +681,11 @@ def partitive_sg(word:str) -> str:
 
 
     #RAKKAUS -> rakkautta
-    elif word[-4:] in ("eus", "uus", "kaus","ous"):
+    elif word[-4:] in ("kaus"):
         word = word[:-1] + "tta"
     #All thanks to my beautiful girlfriend Maria that helped me with this program <3
     #avaruus and kauneus
-    elif word[-3:] in ("eus", "uus","ous"):
+    elif word[-3:] in ("eus", "uus","ous", "aus"):
         word = word[:-1] + "tta"
 
     #kokemus
@@ -606,13 +704,13 @@ def partitive_sg(word:str) -> str:
 
     #E vene -> venettä, laite -> laitetta
     elif word[-1] == "e" and word[-2:] != "ie":
-        if any(vowel in word[-6:] for vowel in changing_vowels) or any(vowel in word[-6:] for vowel in neutral_vowels) and not any(vowel in word[-6:] for vowel in neutralising_vowels):
+        if any(vowel in word[-5:] for vowel in changing_vowels) or any(vowel in word[-6:] for vowel in neutral_vowels) and not any(vowel in word[-6:] for vowel in neutralising_vowels):
             word += "ttä"
         else: word += "tta"
 
     # Loan words
     elif word[-1] == "i" and word not in i_to_e:
-        if any(vowel in word[-5:] for vowel in changing_vowels) or any(vowel in word[-6:] for vowel in neutral_vowels) and not any(vowel in word[-8:] for vowel in neutralising_vowels):
+        if any(vowel in word[-5:] for vowel in changing_vowels) or (any(vowel in word[-6:] for vowel in neutral_vowels) and not any(vowel in word[-8:] for vowel in neutralising_vowels)):
             word = word +"ä"
         else:
             word = word +"a"
@@ -819,7 +917,172 @@ def main():
 def run_tests():
     print("\n--- RUNNING TESTS ---\n")
 
-    tests_sg = {"veli":"veljeä","metsä": "metsää",
+    tests_sg = {
+    # --- CLOTHING & ACCESSORIES ---
+    "vaate": "vaatetta", "paita": "paitaa", "hame": "hametta", "mekko": "mekkoa", "takki": "takkia",
+    "hattu": "hattua", "pipo": "pipoa", "käsine": "käsinettä", "sukka": "sukkaa", "kenkä": "kenkää",
+    "saapas": "saapasta", "vyö": "vyötä", "huivi": "huivia", "solmio": "solmiota", "puku": "pukua",
+    "tasku": "taskua", "nappi": "nappia", "vetoketju": "vetoketjua", "sateenvarjo": "sateenvarjoa",
+    "laukku": "laukkua", "reppu": "reppua", "lompakko": "lompakkoa", "sormus": "sormusta",
+    "kaulakoru": "kaulakorua", "rannekello": "rannekelloa", "pusero": "puseroa", "huppari": "hupparia",
+    "neule": "neuletta", "liivi": "liiviä", "yöpaita": "yöpaitaa", "kravatti": "kravattia",
+    "rusetti": "rusettia", "kaulaliina": "kaulaliinaa", "lapanen": "lapasta", "sormikas": "sormikasta",
+    "sandaali": "sandaalia", "tohveli": "tohvelia", "kumisaapas": "kumisaapasta", "solki": "solkea",
+    "hihna": "hihnaa", "hiha": "hihaa", "lahje": "lahjetta", "kaulus": "kaulusta", "henkseli": "henkseliä",
+    "uimapuku": "uimapukua", "viitta": "viittaa", "otsanauha": "otsanauhaa", "rintakoru": "rintakorua",
+    "lippalakki": "lippalakkia", "baretti": "barettia", "turkki": "turkkia", "lenkkari": "lenkkaria",
+
+    # --- ABSTRACT & MASS NOUNS ---
+    "vesi": "vettä", "rakkaus": "rakkautta", "onni": "onnea", "ilma": "ilmaa",
+    "lumi": "lunta", "hiekka": "hiekkaa", "multa": "multaa", "ruoka": "ruokaa",
+    "juoma": "juomaa", "maito": "maitoa", "kahvi": "kahvia", "tee": "teetä",
+    "viini": "viiniä", "mehu": "mehua", "veri": "verta",
+    "rauta": "rautaa", "kulta": "kultaa", "hopea": "hopeaa", "kupari": "kuparia",
+    "öljy": "öljyä", "sokeri": "sokeria", "suola": "suolaa", "jauho": "jauhoa",
+    "hunaja": "hunajaa", "liha": "lihaa", "apu": "apua", "voima": "voimaa",
+    "valo": "valoa", "pimeys": "pimeyttä", "lämpö": "lämpöä", "kylmyys": "kylmyyttä",
+    "aika": "aikaa", "elämä": "elämää", "kuolema": "kuolemaa", "toivo": "toivoa",
+    "pelko": "pelkoa", "viha": "vihaa", "suru": "surua", "ilo": "iloa",
+    "rauha": "rauhaa", "sota": "sotaa", "vapaus": "vapautta", "totuus": "totuutta",
+    "valhe": "valhetta", "tieto": "tietoa", "taito": "taitoa", "usko": "uskoa",
+
+    # --- ADJECTIVES ---
+    "suuri": "suurta", "pieni": "pientä", "pitkä": "pitkää", "lyhyt": "lyhyttä",
+    "paksu": "paksua", "ohut": "ohutta", "leveä": "leveää", "kapea": "kapeaa",
+    "uusi": "uutta", "vanha": "vanhaa", "nuori": "nuorta", "rikas": "rikasta",
+    "köyhä": "köyhää", "kaunis": "kaunista", "ruma": "rumaa", "hyvä": "hyvää",
+    "paha": "pahaa", "iloinen": "iloista", "surullinen": "surullista", "viisas": "viisasta",
+    "tyhmä": "tyhmää", "vahva": "vahvaa", "heikko": "heikkoa", "nopea": "nopeaa",
+    "hidas": "hidasta", "kuuma": "kuumaa", "kylmä": "kylmää", "lämmin": "lämmintä",
+    "viileä": "viileää", "kuiva": "kuivaa", "märkä": "märkää", "kova": "kovaa",
+    "pehmeä": "pehmeää", "kallis": "kallista", "halpa": "halpaa", "painava": "painavaa",
+    "kevyt": "kevyttä", "pimeä": "pimeää", "kirkas": "kirkasta", "puhdas": "puhdasta",
+    "likainen": "likaista", "täysi": "täyttä", "tyhjä": "tyhjää", "terve": "tervettä",
+    "sairas": "sairasta", "rehellinen": "rehellistä", "hauska": "hauskaa", "tylsä": "tylsää",
+    "outo": "outoa", "tavallinen": "tavallista", "erilainen": "erilaista",
+    "punainen": "punaista", "sininen": "sinistä", "vihreä": "vihreää", "keltainen": "keltaista",
+    "musta": "mustaa", "valkoinen": "valkoista", "harmaa": "harmaata", "ruskea": "ruskeaa",
+    "oranssi": "oranssia", "violetti": "violettia", "vaaleanpunainen": "vaaleanpunaista",
+
+    # --- ANIMALS ---
+    "orava": "oravaa", "siili": "siiliä", "hirvi": "hirveä", "peura": "peuraa", "karitsa": "karitsaa",
+    "vuohi": "vuohta", "ankka": "ankkaa", "hanhi": "hanhea", "kana": "kanaa", "kukko": "kukkoa",
+    "pöllö": "pöllöä", "kotka": "kotkaa", "varis": "varista", "harakka": "harakkaa", "pääskynen": "pääskystä",
+    "muurahainen": "muurahaista", "mehiläinen": "mehiläistä", "hämähäkki": "hämähäkkiä", "itikka": "itikkaa",
+    "perhonen": "perhosta", "valas": "valasta", "hylje": "hyljettä", "rapu": "rapua", "etana": "etanaa",
+    "koira": "koiraa", "kissa": "kissaa", "hevonen": "hevosta", "lehmä": "lehmää", "lammas": "lammasta",
+    "sika": "sikaa", "karhu": "karhua", "susi": "sutta", "kettu": "kettua", "jänis": "jänistä",
+    "lintu": "lintua", "kala": "kalaa", "käärme": "käärmettä", "hyönteinen": "hyönteistä", "puu": "puuta",
+    "kukka": "kukkaa", "metsä": "metsää", "järvi": "järveä", "meri": "merta", "joki": "jokea",
+    "vuori": "vuorta", "mäki": "mäkeä", "saari": "saarta", "niemi": "niemeä", "ranta": "rantaa",
+    "taivas": "taivasta", "aurinko": "aurinkoa", "kuu": "kuuta", "tähti": "tähteä", "pilvi": "pilveä",
+    "ukkonen": "ukkosta", "kivi": "kiveä", "lehti": "lehteä", "oksa": "oksaa", "juuri": "juurta",
+    "marja": "marjaa", "sieni": "sientä", "puro": "puroa", "lähde": "lähdettä", "tunturi": "tunturia",
+    "ilves": "ilvestä", "poro": "poroa", "myyrä": "myyrää", "lepakko": "lepakkoa", "joutsen": "joutsenta",
+    "sorsa": "sorsaa", "lokki": "lokkia", "tikka": "tikkaa", "kimalainen": "kimalaista",
+    "kärpänen": "kärpästä", "mato": "matoa", "sammakko": "sammakkoa", "sisilisko": "sisiliskoa", "koivu": "koivua",
+    "mänty": "mäntyä", "kuusi": "kuusta", "tammi": "tammea", "vaahtera": "vaahteraa", "pihlaja": "pihlajaa",
+    "kanto": "kantoa", "neulanen": "neulasta", "käpy": "käpyä", "oja": "ojaa", "lampi": "lampea",
+    "lahti": "lahtea", "salmi": "salmea", "koski": "koskea", "vesiputous": "vesiputousta",
+    "jyrkänne": "jyrkännettä", "huippu": "huippua", "rinne": "rinnettä", "laakso": "laaksoa", "kyy": "kyytä",
+    "ahven": "ahventa", "hauki": "haukea", "lohi": "lohta", "tiikeri": "tiikeriä", "leijona": "leijonaa",
+    "norsu": "norsua", "kirahvi": "kirahvia", "apina": "apinaa", "seepra": "seepraa",
+    "krokotiili": "krokotiilia", "kilpikonna": "kilpikonnaa", "pingviini": "pingviiniä", "kameli": "kamelia",
+
+    # --- BODY PARTS ---
+    "pää": "päätä", "silmä": "silmää", "korva": "korvaa", "nenä": "nenää", "suu": "suuta",
+    "huuli": "huulta", "hammas": "hammasta", "kieli": "kieltä", "kaula": "kaulaa", "kurkku": "kurkkua",
+    "olkapää": "olkapäätä", "käsivarsi": "käsivartta", "käsi": "kättä", "sormi": "sormea", "kynsi": "kynttä",
+    "rinta": "rintaa", "vatsa": "vatsaa", "selkä": "selkää", "jalka": "jalkaa", "polvi": "polvea",
+    "varvas": "varvasta", "iho": "ihoa", "luu": "luuta", "sydän": "sydäntä", "keuhko": "keuhkoa",
+    "lihas": "lihasta", "naama": "naamaa", "maksa": "maksaa", "munuainen": "munuaista", "nivel": "niveltä",
+    "verisuoni": "verisuonta", "hermo": "hermoa", "otsa": "otsaa", "leuka": "leukaa",
+    "poski": "poskea", "kulmakarva": "kulmakarvaa", "ripsi": "ripseä", "napa": "napaa",
+    "vyötärö": "vyötäröä", "kyynärpää": "kyynärpäätä", "ranne": "rannetta", "kämmen": "kämmentä",
+    "lantio": "lantiota", "reisi": "reittä", "pohje": "pohjetta", "nilkka": "nilkkaa", "kantapää": "kantapäätä",
+
+    # --- HOUSE & OBJECTS ---
+    "talo": "taloa", "koti": "kotia", "asunto": "asuntoa", "huone": "huonetta", "keittiö": "keittiötä",
+    "kylpyhuone": "kylpyhuonetta", "makuuhuone": "makuuhuonetta", "olohuone": "olohuonetta", "eteinen": "eteistä",
+    "parveke": "parveketta", "piha": "pihaa", "ovi": "ovea", "ikkuna": "ikkunaa", "seinä": "seinää",
+    "katto": "kattoa", "lattia": "lattiaa", "porras": "porrasta", "lukko": "lukkoa", "avain": "avainta",
+    "pöytä": "pöytää", "tuoli": "tuolia", "sänky": "sänkyä", "sohva": "sohvaa", "kaappi": "kaappia",
+    "hylly": "hyllyä", "lamppu": "lamppua", "matto": "mattoa", "verho": "verhoa", "peili": "peiliä",
+    "taulu": "taulua", "kello": "kelloa", "radio": "radiota", "televisio": "televisiota",
+    "tietokone": "tietokonetta", "puhelin": "puhelinta", "kone": "konetta", "uuni": "uunia",
+    "hella": "hellaa", "allas": "allasta", "lautanen": "lautasta", "kulho": "kulhoa", "muki": "mukia",
+    "kuppi": "kuppia", "veitsi": "veistä", "haarukka": "haarukkaa", "lusikka": "lusikkaa", "kattila": "kattilaa",
+    "pannu": "pannua", "astianpesukone": "astianpesukonetta", "pyykinpesukone": "pyykinpesukonetta",
+    "pakastin": "pakastinta", "mikroaaltouuni": "mikroaaltouunia", "leivänpaahdin": "leivänpaahdinta",
+    "vedenkeitin": "vedenkeitintä", "tehosekoitin": "tehosekoitinta", "vatkain": "vatkainta", "kahvinkeitin": "kahvinkeitintä",
+    "imuri": "imuria", "silitysrauta": "silitysrautaa", "laatikko": "laatikkoa", "tiskiallas": "tiskiallasta",
+    "hana": "hanaa", "roskakori": "roskakoria", "tiskiharja": "tiskiharjaa", "sieni": "sientä",
+    "liina": "liinaa", "tyyny": "tyynyä", "peitto": "peittoa", "lakana": "lakanaa", "pyyhe": "pyyhettä",
+    "henkari": "henkaria", "kampa": "kampaa", "hammasharja": "hammasharjaa", "vasara": "vasaraa",
+    "saha": "sahaa", "ruuvimeisseli": "ruuvimeisseliä", "naula": "naulaa", "ruuvi": "ruuvia",
+    "ämpäri": "ämpäriä", "harja": "harjaa", "luuta": "luutaa", "lapio": "lapiota", "akku": "akkua",
+    "johto": "johtoa", "pistorasia": "pistorasiaa", "sytytin": "sytytintä", "kynttilä": "kynttilää",
+    "taskulamppu": "taskulamppua", "mutteri": "mutteria", "porakone": "porakonetta", "pultti": "pulttia",
+    "jakkara": "jakkaraa", "nojatuoli": "nojatuolia", "kirjahylly": "kirjahyllyä", "lipasto": "lipastoa",
+
+    # --- FOOD ---
+    "makkara": "makkaraa", "peruna": "perunaa", "vihannes": "vihannesta", "hedelmä": "hedelmää",
+    "omena": "omenaa", "banaani": "banaania", "sipuli": "sipulia", "valkosipuli": "valkosipulia",
+    "porkkana": "porkkanaa", "kurkku": "kurkkua", "tomaatti": "tomaattia", "paprika": "paprikaa",
+    "salaatti": "salaattia", "kaali": "kaalia", "herne": "hernettä", "papu": "papua", "maissi": "maissia",
+    "päärynä": "päärynää", "luumu": "luumua", "viinirypäle": "viinirypälettä", "mansikka": "mansikkaa",
+    "mustikka": "mustikkaa", "vadelma": "vadelmaa", "sitruuna": "sitruunaa", "appelsiini": "appelsiinia",
+    "pähkinä": "pähkinää", "siemen": "siementä", "leivonnainen": "leivonnaista", "kakku": "kakkua", "keksi": "keksiä",
+    "leipä": "leipää", "sämpylä": "sämpylää", "piirakka": "piirakkaa", "munkki": "munkkia", "pulla": "pullaa",
+
+    # --- TRANSPORT & CITY ---
+    "auto": "autoa", "bussi": "bussia", "juna": "junaa", "lentokone": "lentokonetta", "laiva": "laivaa",
+    "vene": "venettä", "pyörä": "pyörää", "moottoripyörä": "moottoripyörää", "tie": "tietä",
+    "katu": "katua", "polku": "polkua", "silta": "siltaa", "tunneli": "tunnelia", "asema": "asemaa",
+    "satama": "satamaa", "tori": "toria", "puisto": "puistoa", "kaupunki": "kaupunkia", "kylä": "kylää",
+    "kauppa": "kauppaa", "pankki": "pankkia", "sairaala": "sairaalaa", "koulu": "koulua",
+    "kirkko": "kirkkoa", "tehdas": "tehdasta", "hotelli": "hotellia", "ravintola": "ravintolaa",
+    "kahvila": "kahvilaa", "museo": "museota", "kirjasto": "kirjastoa", "teatteri": "teatteria",
+    "apteekki": "apteekkia", "lentokenttä": "lentokenttää", "laituri": "laituria", "rekka": "rekkaa",
+
+    # --- WORK & MEDIA ---
+    "opiskelija": "opiskelijaa", "opettaja": "opettajaa", "rehtori": "rehtoria", "luokka": "luokkaa",
+    "kurssi": "kurssia", "koe": "koetta", "arvosana": "arvosanaa", "kynä": "kynää",
+    "lyijykynä": "lyijykynää", "pyyhekumi": "pyyhekumia", "viivatin": "viivatinta", "vihko": "vihkoa",
+    "kirja": "kirjaa", "sanakirja": "sanakirjaa", "ammatti": "ammattia", "kokous": "kokousta",
+    "sopimus": "sopimusta", "asiakas": "asiakasta", "pomo": "pomoa", "työpaikka": "työpaikkaa",
+    "yritys": "yritystä", "sanomalehti": "sanomalehteä", "aikakauslehti": "aikakauslehteä",
+    "mainos": "mainosta", "näyttö": "näyttöä", "näppäimistö": "näppäimistöä", "hiiri": "hiirtä",
+    "tulostin": "tulostinta", "laturi": "laturia", "kaapeli": "kaapelia", "kaiutin": "kaiutinta",
+    "sovellus": "sovellusta", "tiedosto": "tiedostoa", "kansio": "kansiota", "salasana": "salasanaa",
+    "viesti": "viestiä", "lasku": "laskua", "kuitti": "kuittia", "allekirjoitus": "allekirjoitusta",
+
+    # --- TIME ---
+    "sekunti": "sekuntia", "minuutti": "minuuttia", "tunti": "tuntia", "päivä": "päivää", "viikko": "viikkoa",
+    "kuukausi": "kuukautta", "vuosi": "vuotta", "vuosisata": "vuosisataa", "aamu": "aamua",
+    "ilta": "iltaa", "yö": "yötä", "maanantai": "maanantaita", "tiistai": "tiistaita",
+    "keskiviikko": "keskiviikkoa", "torstai": "torstaita", "perjantai": "perjantaita",
+    "lauantai": "lauantaita", "sunnuntai": "sunnuntaita", "numero": "numeroa", "hetki": "hetkeä",
+
+    # --- INSTRUMENTS ---
+    "kitara": "kitaraa", "piano": "pianoa", "viulu": "viulua", "rumpu": "rumpua", "huilu": "huilua",
+    "trumpetti": "trumpettia", "basso": "bassoa", "haitari": "haitaria",
+    "saksofoni": "saksofonia", "kantele": "kanteletta",
+
+    # --- PROFESSIONS ---
+    "lääkäri": "lääkäriä", "hoitaja": "hoitajaa", "poliisi": "poliisia", "palomies": "palomiestä",
+    "lentäjä": "lentäjää", "kokki": "kokkia", "tarjoilija": "tarjoilijaa", "myyjä": "myyjää",
+    "insinööri": "insinööriä", "arkkitehti": "arkkitehtia", "taiteilija": "taiteilijaa",
+    "muusikko": "muusikkoa", "kirjailija": "kirjailijaa", "lakimies": "lakimiestä", "tuomari": "tuomaria",
+    "pappi": "pappia", "siivooja": "siivoojaa", "mekaanikko": "mekaanikkoa", "leipuri": "leipuria",
+
+    # --- MISC ---
+    "esine": "esinettä", "kappale": "kappaletta", "osa": "osaa", "ryhmä": "ryhmää",
+    "joukko": "joukkoa", "pino": "pinoa", "kasa": "kasaa", "rivi": "riviä",
+    "jono": "jonoa", "aukko": "aukkoa", "reikä": "reikää", "rako": "rakoa",
+    "pinta": "pintaa", "reuna": "reunaa", "kulma": "kulmaa", "ympyrä": "ympyrää",
+    "viiva": "viivaa", "piste": "pistettä", "merkki": "merkkiä", "kuva": "kuvaa",
+    "ääni": "ääntä", "haju": "hajua", "maku": "makua", "tunne": "tunnetta", "veli":"veljeä","metsä": "metsää",
     "takki": "takkia",
     "hattu": "hattua",
     "pipo": "pipoa",
@@ -1336,8 +1599,580 @@ def run_tests():
 "pöytäliina":"pöytäliinaa","kirjahylly":"kirjahyllyä","tietokoneohjelma":"tietokoneohjelmaa"
     }
 
-    tests_pl = {"paperi":"papereita","banaani":"banaaneja","appelsiini":"appelsiineja","kahvi":"kahveja",
-"tee":"teitä","juusto":"juustoja","voi":"voita","sokeri":"sokereita","maito":"maitoja",
+    tests_pl = {
+    # --- Esimerkit ja testisanat ---
+    "paperi": "papereita", "banaani": "banaaneja", "appelsiini": "appelsiineja",
+    "kahvi": "kahveja", "tee": "teitä", "juusto": "juustoja", "voi": "voita",
+    "sokeri": "sokereita", "maito": "maitoja",
+    
+    # --- CLOTHING & ACCESSORIES ---
+    "vaate": "vaatteita", "paita": "paitoja", "hame": "hameita", "mekko": "mekkoja",
+    "takki": "takkeja", "hattu": "hattuja", "pipo": "pipoja", "käsine": "käsineitä",
+    "sukka": "sukkia", "kenkä": "kenkiä", "saapas": "saappaita", "vyö": "vöitä",
+    "huivi": "huiveja", "solmio": "solmioita", "puku": "pukuja", "tasku": "taskuja",
+    "nappi": "nappeja", "vetoketju": "vetoketjuja", "sateenvarjo": "sateenvarjoja",
+    "laukku": "laukkuja", "reppu": "reppuja", "lompakko": "lompakoita", "sormus": "sormuksia",
+    "kaulakoru": "kaulakoruja", "rannekello": "rannekelloja", "pusero": "puseroita",
+    "huppari": "huppareita", "neule": "neuleita", "liivi": "liivejä", "yöpaita": "yöpaitoja",
+    "kravatti": "kravatteja", "rusetti": "rusetteja", "kaulaliina": "kaulaliinoja",
+    "lapanen": "lapasia", "sormikas": "sormikkaita", "sandaali": "sandaaleja",
+    "tohveli": "tohveleita", "kumisaapas": "kumisaappaita", "solki": "solkia",
+    "hihna": "hihnoja", "hiha": "hihoja", "lahje": "lahkeita", "kaulus": "kauluksia",
+    "henkseli": "henkseleitä", "uimapuku": "uimapukuja", "bikinien yläosa": "bikinien yläosia",
+    "viitta": "viittoja", "otsanauha": "otsanauhoja", "rintakoru": "rintakoruja",
+    "kalvosinnappi": "kalvosinnappeja", "lippalakki": "lippalakkeja", "baretti": "baretteja",
+    "turkki": "turkkeja", "lenkkari": "lenkkareita",
+
+    # --- TECHNICAL & INDUSTRIAL ---
+    "pumppu": "pumppuja", "moottori": "moottoreita", "turbiini": "turbiineja",
+    "generaattori": "generaattoreita", "muuntaja": "muuntajia", "venttiili": "venttiilejä",
+    "putki": "putkia", "johto": "johtoja", "kaapeli": "kaapeleita", "kytkin": "kytkimiä",
+    "anturi": "antureita", "mittari": "mittareita", "robotti": "robotteja", "siru": "sirjuja",
+    "prosessori": "prosessoreita", "kovalevy": "kovalevyjä", "virtalähde": "virtalähteitä",
+    "jäähdytin": "jäähdyttimiä", "tuuletin": "tuulettimia", "suodatin": "suodattimia",
+    "tiiviste": "tiivisteitä", "laakeri": "laakereita", "hammaspyörä": "hammaspyöriä",
+    "ketju": "ketjuja", "vipu": "vipuja", "jousi": "jousia", "pultti": "pultteja",
+    "mutteri": "muttereita", "prikka": "prikkoja", "niitti": "niittejä",
+    "hitsaussauma": "hitsaussaumoja", "teline": "telineitä", "nosturi": "nostureita",
+    "trukin": "trukkeja", "kontti": "kontteja", "lava": "lavoja", "mutteriavain": "mutteriavaimia",
+    "ruuvitaltta": "ruuvitalttoja", "pora": "poria", "hiomakone": "hiomakoneita",
+    "sirkkeli": "sirkkeleitä", "höylä": "höyliä", "taltta": "talttoja", "viila": "viiloja",
+    "lekka": "lekoja", "sorkkarauta": "sorkkarautoja", "lapio": "lapioita", "hanko": "hankoja",
+    "viikate": "viikatteita", "sirppi": "sirppejä", "kottikärry": "kottikärryjä",
+    "kompressori": "kompressoreita", "hitsikone": "hitsikoneita", "sorvi": "sorveja",
+    "jyrsin": "jyrsimiä", "painepesuri": "painepesureita", "ruohonleikkuri": "ruohonleikkureita",
+    "lehtipuhallin": "lehtipuhaltimia", "lumilinko": "lumilinkoja", "aggregaatti": "aggregaatteja",
+    "rele": "releitä", "vastus": "vastuksia", "kondensaattori": "kondensaattoreita",
+    "diodi": "diodeja", "transistori": "transistoreita", "piirilevy": "piirilevyjä",
+    "antenni": "antenneja", "satelliitti": "satelliitteja", "kaukoputki": "kaukoputkia",
+    "mikroskooppi": "mikroskooppeja", "laboratoriotakki": "laboratoriotakkeja",
+    "koeputki": "koeputkia", "pipetti": "pipettejä", "vaaka": "vaakoja",
+    "lämpömittari": "lämpömittareita", "verenpainemittari": "verenpainemittareita",
+    "stetoskooppi": "stetoskooppeja", "ruisku": "ruiskuja", "laastari": "laastareita",
+    "sideharsorulla": "sideharsorullia", "pyörätuoli": "pyörätuoleja", "kipsi": "kipsejä",
+    "tekohammas": "tekohampaita", "kuulolaite": "kuulolaitteita",
+    "silmälasinsanka": "silmälasinsankoja", "piilolinssi": "piilolinssejä",
+    "hammasrauta": "hammasrautoja", "tutti": "tutteja", "vaippa": "vaippoja",
+    "vaunu": "vaunuja", "ratas": "rattaita", "keinu": "keinuja", "liukumäki": "liukumäkiä",
+    "hiekkalaatikko": "hiekkalaatikoita", "kiipeilyteline": "kiipeilytelineitä",
+    "lippu": "lippuja", "viiri": "viirejä", "kilpi": "kilpiä", "miekka": "miekkoja",
+    "jousi": "jousia", "nuoli": "nuolia", "keihäs": "keihäitä", "kanuuna": "kanuunoita",
+    "panssarivaunu": "panssarivaunuja", "sukellusvene": "sukellusveneitä",
+    "laskuvarjo": "laskuvarjoja", "kuumailmapallo": "kuumailmapalloja",
+    "avaruusalus": "avaruusaluksia", "raketti": "raketteja", "komeetta": "komeettoja",
+    "asteroidi": "asteroideja", "musta aukko": "mustia aukkoja", "galaksi": "galakseja",
+    "sumu": "sumuja", "tähdenlento": "tähdenlentoja",
+
+    # --- BODY PARTS ---
+    "pää": "päitä", "silmä": "silmiä", "korva": "korvia", "nenä": "neniä", "suu": "suita",
+    "huuli": "huulia", "hammas": "hampaita", "kieli": "kieliä", "kaula": "kauloja",
+    "kurkku": "kurkkuja", "olkapää": "olkapäitä", "käsivarsi": "käsivarsia", "käsi": "käsiä",
+    "sormi": "sormia", "kynsi": "kynsiä", "rinta": "rintoja", "vatsa": "vatsoja", "selkä": "selkiä",
+    "jalka": "jalkoja", "polvi": "polvia", "varvas": "varpaita", "iho": "ihoja", "luu": "luita",
+    "sydän": "sydämiä", "keuhko": "keuhkoja", "lihas": "lihaksia", "naama": "naamoja",
+    "maksa": "maksoja", "munuainen": "munuaisia", "nivel": "niveliä", "verisuoni": "verisuonia",
+    "hermo": "hermoja", "otsa": "otsia", "leuka": "leukoja", "poski": "poskia",
+    "kulmakarva": "kulmakarvoja", "ripsi": "ripsiä", "napa": "napoja", "vyötärö": "vyötäröitä",
+    "kyynärpää": "kyynärpäitä", "ranne": "ranteita", "kämmen": "kämmeniä", "lantio": "lantioita",
+    "reisi": "reisiä", "pohje": "pohkeita", "nilkka": "nilkkoja", "kantapää": "kantapäitä",
+    "pikkurilli": "pikkurillejä", "nimetön": "nimettömiä", "keskisormi": "keskisormia",
+    "etusormi": "etusormia", "peukalo": "peukaloita", "isoavarvas": "isovarpaita",
+    "kantaluu": "kantaluita", "nikama": "nikamia", "kylkiluu": "kylkiluita",
+    "leukaluu": "leukaluita", "aivonystyrä": "aivonystyröitä", "karva": "karvoja",
+    "pisama": "pisamia", "luomi": "luomia", "arpi": "arpia",
+
+    # --- ABSTRACT & MASS NOUNS ---
+    "vesi": "vesiä", "rakkaus": "rakkauksia", "onni": "onnia", "ilma": "ilmoja",
+    "lumi": "lumia", "hiekka": "hiekkoja", "multa": "multia", "ruoka": "ruokia",
+    "juoma": "juomia", "viini": "viinejä", "mehu": "mehuja", "veri": "veriä",
+    "rauta": "rautoja", "kulta": "kultia", "hopea": "hopeita", "kupari": "kupareita",
+    "öljy": "öljyjä", "suola": "suoloja", "jauho": "jauhoja", "hunaja": "hunajia",
+    "liha": "lihoja", "apu": "apuja", "voima": "voimia", "valo": "valoja",
+    "pimeys": "pimeyksiä", "lämpö": "lämpöjä", "kylmyys": "kylmyyksiä", "aika": "aikoja",
+    "elämä": "elämiä", "kuolema": "kuolemia", "toivo": "toivoja", "pelko": "pelkoja",
+    "viha": "vihoja", "suru": "suruja", "ilo": "iloja", "rauha": "rauhoja", "sota": "sotia",
+    "vapaus": "vapauksia", "totuus": "totuuksia", "valhe": "valheita", "tieto": "tietoja",
+    "taito": "taitoja", "usko": "uskoja",
+
+    # --- ADJECTIVES ---
+    "suuri": "suuria", "pieni": "pieniä", "pitkä": "pitkiä", "lyhyt": "lyhyitä",
+    "paksu": "paksuja", "ohut": "ohuita", "leveä": "leveitä", "kapea": "kapeita",
+    "uusi": "uusia", "vanha": "vanhoja", "nuori": "nuoria", "rikas": "rikkaita",
+    "köyhä": "köyhiä", "kaunis": "kauniita", "ruma": "rumia", "hyvä": "hyviä",
+    "paha": "pahoja", "iloinen": "iloisia", "surullinen": "surullisia", "viisas": "viisaita",
+    "tyhmä": "tyhmiä", "vahva": "vahvoja", "heikko": "heikkoja", "nopea": "nopeita",
+    "hidas": "hitaita", "kuuma": "kuumia", "kylmä": "kylmiä", "lämmin": "lämpimiä",
+    "viileä": "viileitä", "kuiva": "kuivia", "märkä": "märkiä", "kova": "kovia",
+    "pehmeä": "pehmeitä", "kallis": "kalliita", "halpa": "halpoja", "painava": "painavia",
+    "kevyt": "kevyitä", "pimeä": "pimeitä", "kirkas": "kirkkaita", "puhdas": "puhtaita",
+    "likainen": "likaisia", "täysi": "täysiä", "tyhjä": "tyhjiä", "terve": "terveitä",
+    "sairas": "sairaita", "rehellinen": "rehellisiä", "hauska": "hauskoja", "tylsä": "tylsiä",
+    "outo": "outoja", "tavallinen": "tavallisia", "erilainen": "erilaisia",
+    "punainen": "punaisia", "sininen": "sinisiä", "vihreä": "vihreitä", "keltainen": "keltaisia",
+    "musta": "mustia", "valkoinen": "valkoisia", "harmaa": "harmaita", "ruskea": "ruskeita",
+    "oranssi": "oransseja", "violetti": "violetteja", "vaaleanpunainen": "vaaleanpunaisia",
+
+    # --- ANIMALS & BIOLOGY ---
+    "orava": "oravia", "siili": "siilejä", "hirvi": "hirviä", "peura": "peuroja",
+    "karitsa": "karitsoita", "vuohi": "vuohia", "ankka": "ankkoja", "hanhi": "hanhia",
+    "kana": "kanoja", "kukko": "kukkoja", "pöllö": "pöllöjä", "kotka": "kotkia",
+    "varis": "variksia", "harakka": "harakoita", "pääskynen": "pääskysiä",
+    "muurahainen": "muurahaisia", "mehiläinen": "mehiläisiä", "hämähäkki": "hämähäkkejä",
+    "itikka": "itikoita", "perhonen": "perhosia", "valas": "valaita", "hylje": "hylkeitä",
+    "rapu": "rapuja", "etana": "etanoita", "koira": "koiria", "kissa": "kissoja",
+    "hevonen": "hevosia", "lehmä": "lehmiä", "lammas": "lampaita", "sika": "sikoja",
+    "karhu": "karhuja", "susi": "susia", "kettu": "kettuja", "jänis": "jäniksiä",
+    "lintu": "lintuja", "kala": "kaloja", "käärme": "käärmeitä", "hyönteinen": "hyönteisiä",
+    "puu": "puita", "kukka": "kukkia", "metsä": "metsiä", "järvi": "järviä", "meri": "meriä",
+    "joki": "jokia", "vuori": "vuoria", "mäki": "mäkiä", "saari": "saaria", "niemi": "niemiä",
+    "ranta": "rantoja", "taivas": "taivaita", "aurinko": "aurinkoja", "kuu": "kuita",
+    "tähti": "tähtiä", "pilvi": "pilviä", "ukkonen": "ukkosia", "kivi": "kiviä",
+    "lehti": "lehtiä", "oksa": "oksia", "juuri": "juuria", "marja": "marjoja",
+    "sieni": "sieniä", "puro": "puroja", "lähde": "lähteitä", "tunturi": "tuntureita",
+    "ilves": "ilveksiä", "poro": "poroja", "myyrä": "myyriä", "lepakko": "lepakoita",
+    "joutsen": "joutsenia", "sorsa": "sorsia", "lokki": "lokkeja", "tikka": "tikkoja",
+    "kimalainen": "kimalaisia", "kärpänen": "kärpäsiä", "mato": "matoja",
+    "sammakko": "sammakoita", "sisilisko": "sisiliskoja", "koivu": "koivuja",
+    "mänty": "mäntyjä", "kuusi": "kuusia", "tammi": "tammia", "vaahtera": "vaahteroita",
+    "pihlaja": "pihlajoita", "kanto": "kantoja", "neulanen": "neulasia", "käpy": "käpyjä",
+    "oja": "ojia", "lampi": "lampia", "lahti": "lahtia", "salmi": "salmia", "koski": "koskia",
+    "vesiputous": "vesiputouksia", "jyrkänne": "jyrkänteitä", "huippu": "huippuja",
+    "rinne": "rinteitä", "laakso": "laaksoja", "kyy": "kyitä", "rantakäärme": "rantakäärmeitä",
+    "ahven": "ahvenia", "hauki": "haukia", "lohi": "lohia", "siika": "siikoja",
+    "muikku": "muikkuja", "simpukka": "simpukoita", "mustekala": "mustekaloja",
+    "meduusa": "meduusoja", "pulu": "puluja", "tiikeri": "tiikereitä", "leijona": "leijonia",
+    "norsu": "norsuja", "kirahvi": "kirahveja", "apina": "apinoita", "seepra": "seeproja",
+    "krokotiili": "krokotiileja", "kilpikonna": "kilpikonnia", "pingviini": "pingviinejä",
+    "kameli": "kameleita", "papukaija": "papukaijoja", "päästäinen": "päästäisiä",
+    "majava": "majavia", "vesikko": "vesikkoja", "nääpikkä": "nääpikköjä", "kärppä": "kärppiä",
+    "ahma": "ahmoja", "mursu": "mursuja",
+
+    # --- HOUSE & EVERYDAY OBJECTS ---
+    "talo": "taloja", "koti": "koteja", "asunto": "asuntoja", "huone": "huoneita",
+    "keittiö": "keittiöitä", "kylpyhuone": "kylpyhuoneita", "makuuhuone": "makuuhuoneita",
+    "olohuone": "olohuoneita", "eteinen": "eteisiä", "parveke": "parvekkeita",
+    "piha": "pihoja", "ovi": "ovia", "ikkuna": "ikkunoita", "seinä": "seiniä",
+    "katto": "kattoja", "lattia": "lattioita", "porras": "portaita", "lukko": "lukkoja",
+    "avain": "avaimia", "pöytä": "pöytiä", "tuoli": "tuoleja", "sänky": "sänkyjä",
+    "sohva": "sohvia", "kaappi": "kaappeja", "hylly": "hyllyjä", "lamppu": "lamppuja",
+    "matto": "mattoja", "verho": "verhoja", "peili": "peilejä", "taulu": "tauluja",
+    "kello": "kelloja", "radio": "radioita", "televisio": "televisioita",
+    "tietokone": "tietokoneita", "puhelin": "puhelimia", "kone": "koneita", "uuni": "uuneja",
+    "hella": "helloja", "allas": "altaita", "lautanen": "lautasia", "kulho": "kulhoja",
+    "muki": "mukeja", "kuppi": "kuppeja", "veitsi": "veitsiä", "haarukka": "haarukoita",
+    "lusikka": "lusikoita", "kattila": "kattiloita", "pannu": "pannuja",
+    "astianpesukone": "astianpesukoneita", "pyykinpesukone": "pyykinpesukoneita",
+    "pakastin": "pakastimia", "mikroaaltouuni": "mikroaaltouuneja",
+    "leivänpaahdin": "leivänpaahtimia", "vedenkeitin": "vedenkeittimiä",
+    "tehosekoitin": "tehosekoittimia", "vatkain": "vatkaimia", "kahvinkeitin": "kahvinkeittimiä",
+    "imuri": "imureita", "silitysrauta": "silitysrautoja", "laatikko": "laatikoita",
+    "tiskiallas": "tiskialtaita", "hana": "hanoja", "roskakori": "roskakoreja",
+    "tiskiharja": "tiskiharjoja", "sieni": "sieniä", "liina": "liinoja", "tyyny": "tyynyjä",
+    "peitto": "peittoja", "lakana": "lakanoita", "pyyhe": "pyyhkeitä", "henkari": "henkareita",
+    "kampa": "kampoja", "hammasharja": "hammasharjoja", "vasara": "vasaroita", "saha": "sahoja",
+    "ruuvimeisseli": "ruuvimeisseleitä", "naula": "nauloja", "ruuvi": "ruuveja",
+    "ämpäri": "ämpäreitä", "harja": "harjoja", "luuta": "luutia", "lapio": "lapioita",
+    "akku": "akkuja", "sytytin": "sytyttimiä", "kynttilä": "kynttilöitä",
+    "taskulamppu": "taskulamppuja", "porakone": "porakoneita", "jakkara": "jakkaroita",
+    "nojatuoli": "nojatuoleja", "kirjahylly": "kirjahyllyjä", "lipasto": "lipastoja",
+    "yöpöytä": "yöpöytiä", "vaatekaappi": "vaatekaappeja", "kynnys": "kynnyksiä",
+    "kahva": "kahvoja", "sarana": "saranoita", "patteri": "pattereita",
+    "pistorasia": "pistorasioita", "jatkojohto": "jatkojohtoja", "sulake": "sulakkeita",
+    "hehkulamppu": "hehkulamppuja", "varjostin": "varjostimia", "vaasi": "vaaseja",
+    "ruukku": "ruukkuja", "tarjotin": "tarjottimia", "pannunalunen": "pannunalusia",
+    "patakinnas": "patakintaita", "esiliina": "esiliinoja", "leikkuulauta": "leikkuulautoja",
+    "raastin": "raastimia", "siivilä": "siivilöitä", "kuorimaveitsi": "kuorimaveitsiä",
+    "perunasurvin": "perunasurvimia", "vispilä": "vispilöitä", "kaulun": "kaulimia",
+
+    # --- FOOD & INGREDIENTS ---
+    "makkara": "makkaroita", "peruna": "perunoita", "vihannes": "vihanneksia",
+    "hedelmä": "hedelmiä", "sipuli": "sipuleita", "valkosipuli": "valkosipuleita",
+    "porkkana": "porkkanoita", "kurkku": "kurkkuja", "tomaatti": "tomaatteja",
+    "paprika": "paprikoita", "salaatti": "salaatteja", "kaali": "kaaleja",
+    "herne": "herneitä", "papu": "papuja", "maissi": "maisseja", "päärynä": "päärynöitä",
+    "luumu": "luumuja", "viinirypäle": "viinirypäleitä", "mansikka": "mansikoita",
+    "mustikka": "mustikoita", "vadelma": "vadelmia", "sitruuna": "sitruunoita",
+    "pähkinä": "pähkinöitä", "siemen": "siemeniä", "leivonnainen": "leivonnaisia",
+    "kakku": "kakkuja", "keksi": "keksejä", "leipä": "leipiä", "sämpylä": "sämpylöitä",
+    "piirakka": "piirakoita", "munkki": "munkkeja", "pulla": "pullia",
+    "voileipä": "voileipiä", "hampurilainen": "hampurilaisia", "pizza": "pizzoja",
+    "kananmuna": "kananmunia", "lihapulla": "lihapullia", "nakki": "nakkeja",
+    "pihvi": "pihvejä", "kyljys": "kyljyksiä", "koipi": "koipia", "filee": "fileitä",
+    "katkarapu": "katkarapuja", "simpukka": "simpukoita", "oliivi": "oliiveja",
+    "kapris": "kapriksia", "retiisi": "retiisejä", "parsa": "parsoja",
+    "kukkakaali": "kukkakaaleja", "parsakaali": "parsakaaleja", "munakoiso": "munakoisoja",
+    "kesäkurpitsa": "kesäkurpitsoja",
+
+    # --- TRANSPORT & CITY ---
+    "auto": "autoja", "bussi": "busseja", "juna": "junia", "lentokone": "lentokoneita",
+    "laiva": "laivoja", "vene": "veneitä", "pyörä": "pyöriä", "moottoripyörä": "moottoripyöriä",
+    "tie": "teitä", "katu": "katuja", "polku": "polkuja", "silta": "siltoja",
+    "tunneli": "tunneleita", "asema": "asemia", "satama": "satamia", "tori": "toreja",
+    "puisto": "puistoja", "kaupunki": "kaupunkeja", "kylä": "kyliä", "keskusta": "keskustoja",
+    "kauppa": "kauppoja", "pankki": "pankkeja", "sairaala": "sairaaloita", "koulu": "kouluja",
+    "kirkko": "kirkkoja", "tehdas": "tehtaita", "hotelli": "hotelleja",
+    "ravintola": "ravintoloita", "kahvila": "kahviloita", "museo": "museoita",
+    "kirjasto": "kirjastoja", "teatteri": "teattereita", "apteekki": "apteekkeja",
+    "lentokenttä": "lentokenttiä", "laituri": "laitureita", "kiitotie": "kiitoteitä",
+    "opas": "oppaita", "kartta": "karttoja", "suunta": "suuntia", "rekka": "rekkoja",
+    "paku": "pakuja", "traktori": "traktoreita", "mopo": "mopoja", "ratikka": "ratikoita",
+    "metro": "metroja", "helikopteri": "helikoptereita", "purjevene": "purjeveneitä",
+    "soutuvene": "soutuveneitä", "liikennemerkki": "liikennemerkkejä",
+    "liikennevalo": "liikennevaloja", "suojatie": "suojateitä", "pysäkki": "pysäkkejä",
+    "parkkipaikka": "parkkipaikkoja", "autotalli": "autotalleja", "pilvenpiirtäjä": "pilvenpiirtäjiä",
+    "mökki": "mökkejä", "talli": "talleja", "navetta": "navettoja", "lato": "latoja",
+    "aita": "aitoja", "portti": "portteja", "penkki": "penkkejä", "patsas": "patsaita",
+    "suihkulähde": "suihkulähteitä",
+
+    # --- WORK, MEDIA, EDUCATION ---
+    "opiskelija": "opiskelijoita", "opettaja": "opettajia", "rehtori": "rehtoreita",
+    "luokka": "luokkia", "kurssi": "kursseja", "koe": "kokeita", "arvosana": "arvosanoja",
+    "kynä": "kyniä", "lyijykynä": "lyijykyniä", "pyyhekumi": "pyyhekumeja",
+    "viivatin": "viivaimia", "vihko": "vihkoja", "kirja": "kirjoja", "sanakirja": "sanakirjoja",
+    "tussi": "tusseja", "liitu": "liituja", "ammatti": "ammatteja", "kokous": "kokouksia",
+    "sopimus": "sopimuksia", "asiakas": "asiakkaita", "pomo": "pomoja",
+    "työpaikka": "työpaikkoja", "yritys": "yrityksiä", "sanomalehti": "sanomalehtiä",
+    "aikakauslehti": "aikakauslehtiä", "mainos": "mainoksia", "näyttö": "näyttöjä",
+    "näppäimistö": "näppäimistöjä", "hiiri": "hiiriä", "tulostin": "tulostimia",
+    "laturi": "latureita", "kaiutin": "kaiuttimia", "kaukosäädin": "kaukosäätimiä",
+    "sovellus": "sovelluksia", "tiedosto": "tiedostoja", "kansio": "kansioita",
+    "salasana": "salasanoja", "viesti": "viestejä", "lasku": "laskuja", "kuitti": "kuitteja",
+    "allekirjoitus": "allekirjoituksia", "vankila": "vankiloita", "mittanauha": "mittanauhoja",
+    "todistus": "todistuksia", "tutkinto": "tutkintoja", "yliopisto": "yliopistoja",
+    "nitoja": "nitojia", "klemmari": "klemmareita", "teippirulla": "teippirullia",
+    "kirjekuori": "kirjekuoria", "postimerkki": "postimerkkejä", "kortti": "kortteja",
+    "kalenteri": "kalentereita", "muistilehtiö": "muistilehtiöitä", "piirustus": "piirustuksia",
+    "valokuva": "valokuvia", "maalaus": "maalauksia", "veistos": "veistoksia",
+    "kamera": "kameroita", "objektiivi": "objektiiveja", "jalusta": "jalustoja",
+    "mikrofoni": "mikrofoneja", "kuuloke": "kuulokkeita", "levy": "levyjä",
+    "muistitikku": "muistitikkuja", "reititin": "reitittimiä",
+
+    # --- TIME & NUMBERS ---
+    "sekunti": "sekunteja", "minuutti": "minuutteja", "tunti": "tunteja", "päivä": "päiviä",
+    "viikko": "viikkoja", "kuukausi": "kuukausia", "vuosi": "vuosia", "vuosisata": "vuosisatoja",
+    "aamu": "aamuja", "ilta": "iltoja", "yö": "öitä", "maanantai": "maanantaita",
+    "tiistai": "tiistaita", "keskiviikko": "keskiviikkoja", "torstai": "torstaita",
+    "perjantai": "perjantaita", "lauantai": "lauantaita", "sunnuntai": "sunnuntaita",
+    "numero": "numeroita", "hetki": "hetkiä",
+
+    # --- SPORTS, HOBBIES, MUSIC ---
+    "pallo": "palloja", "maila": "mailoja", "verkko": "verkkoja", "maali": "maaleja",
+    "kypärä": "kypäriä", "suksi": "suksia", "sauva": "sauvoja", "luistin": "luistimia",
+    "potkulauta": "potkulautoja", "rullalauta": "rullalautoja", "mitali": "mitaleja",
+    "pokaali": "pokaaleja", "rata": "ratoja", "kenttä": "kenttiä", "hyppylauta": "hyppylautoja",
+    "trampoliini": "trampoliineja", "keila": "keiloja", "noppa": "noppia",
+    "nappula": "nappuloita", "korttipakka": "korttipakkoja", "pelilauta": "pelilautoja",
+    "palapeli": "palapelejä", "nukke": "nukkeja", "pehmolelu": "pehmoleluja",
+    "pienoismalli": "pienoismalleja", "soitin": "soittimia", "kitara": "kitaroita",
+    "piano": "pianoja", "viulu": "viuluja", "rumpu": "rumpuja", "huilu": "huiluja",
+    "trumpetti": "trumpetteja", "sähkökitara": "sähkökitaroita", "basso": "bassoja",
+    "syntetisaattori": "syntetisaattoreita", "vahvistin": "vahvistimia",
+    "nuottiteline": "nuottitelineitä", "haitari": "haitareita", "saksofoni": "saksofoneja",
+    "kantele": "kanteleita",
+
+    # --- PROFESSIONS ---
+    "lääkäri": "lääkäreitä", "hoitaja": "hoitajia", "poliisi": "poliiseja",
+    "palomies": "palomiehiä", "sotilas": "sotilaita", "lentäjä": "lentäjiä",
+    "kapteeni": "kapteeneja", "kuljettaja": "kuljettajia", "kokki": "kokkeja",
+    "tarjoilija": "tarjoilijoita", "myyjä": "myyjiä", "siivooja": "siivoojia",
+    "insinööri": "insinöörejä", "arkkitehti": "arkkitehteja", "ohjelmoija": "ohjelmoijia",
+    "taitaja": "taitajia", "taiteilija": "taiteilijoita", "muusikko": "muusikoita",
+    "näyttelijä": "näyttelijöitä", "ohjaaja": "ohjaajia", "toimittaja": "toimittajia",
+    "kirjailija": "kirjailijoita", "runoilija": "runoilijoita", "tutkija": "tutkijoita",
+    "tiedemies": "tiedemiehiä", "lakimies": "lakimiehiä", "tuomari": "tuomareita",
+    "pappi": "pappeja", "piispa": "piispoja", "kuningas": "kuninkaita",
+    "kuningatar": "kuningattaria", "presidentti": "presidenttejä", "ministeri": "ministereitä",
+     "edustaja": "edustajia", "johtaja": "johtajia",
+    "työntekijä": "työntekijöitä", "harjoittelija": "harjoittelijoita",
+    "asiantuntija": "asiantuntijoita", "neuvonantaja": "neuvonantajia",
+     "sähköasentaja": "sähköasentajia",
+    "putkiasentaja": "putkiasentajia", "muurari": "muurareita", "puuseppä": "puuseppiä",
+    "leipuri": "leipureita", "parturi": "partureita", "kampaaja": "kampaajia",
+    "kosmetologi": "kosmetologeja", "valokuvaaja": "valokuvaajia",
+
+    # --- MISCELLANEOUS COUNTABLE NOUNS ---
+    "esine": "esineitä", "kappale": "kappaleita", "osa": "osia", "ryhmä": "ryhmiä",
+    "joukko": "joukkoja", "pino": "pinoja", "kasa": "kasoja", "rivi": "rivejä",
+    "jono": "jonoja", "aukko": "aukkoja", "reikä": "reikiä", "rako": "rakoja",
+    "pinta": "pintoja", "reuna": "reunoja", "kulma": "kulmia", "keskipiste": "keskipisteitä",
+    "ympyrä": "ympyröitä", "viiva": "viivoja", "piste": "pisteitä", "merkki": "merkkejä",
+    "symboli": "symboleja", "kuva": "kuvia", "varjo": "varjoja", "heijastus": "heijastuksia",
+    "ääni": "ääniä", "melu": "meluja", "kaiku": "kaikuja", "haju": "hajuja",
+    "tuoksu": "tuoksuja", "maku": "makuja", "tunne": "tunteita", "aisti": "aisteja",
+
+    # --- PLANTS & GARDEN ---
+    "ruusu": "ruusuja", "tulppaani": "tulppaaneja", "voikukka": "voikukkia",
+    "lilja": "liljoja", "apila": "apiloita", "sammal": "sammalia", "jäkälä": "jäkäliä",
+    "varpu": "varpuja", "pensas": "pensaita", "heinä": "heiniä", "olki": "olkia",
+    "sipulikasvi": "sipulikasveja", "taimi": "taimia", "pistokas": "pistokkaita",
+    "hedelmäpuu": "hedelmäpuita", "lauta": "lautoja", "purje": "purjeita", "mela": "meloja",
+    "vapa": "vapoja", "koukku": "koukkuja", "uistin": "uistimia", "teltta": "telttoja", "paperi":"papereita","banaani":"banaaneja","appelsiini":"appelsiineja","kahvi":"kahveja",
+    # --- HOBBIES & SPORTS ---
+    "pallo": "palloja", "maila": "mailoja", "verkko": "verkkoja", "maali": "maaleja",
+    "rata": "ratoja", "kenttä": "kenttiä", "kypärä": "kypäriä", "suksi": "suksia",
+    "luistin": "luistimia", "lauta": "lautoja", "purje": "purjeita", "mela": "meloja",
+    "vapa": "vapoja", "koukku": "koukkuja", "uistin": "uistimia", "teltta": "telttoja",
+    "reppu": "reppuja", "sauva": "sauvoja", "potkulauta": "potkulautoja", 
+    "rullalauta": "rullalautoja", "mitali": "mitaleja", "pokaali": "pokaaleja", 
+    "allas": "altaita", "hyppylauta": "hyppylautoja", "trampoliini": "trampoliineja", 
+    "keila": "keiloja", "noppa": "noppia", "nappula": "nappuloita", 
+    "korttipakka": "korttipakkoja", "pelilauta": "pelilautoja", "palapeli": "palapelejä", 
+    "nukke": "nukkeja", "pehmolelu": "pehmoleluja", "pienoismalli": "pienoismalleja", 
+    "soitin": "soittimia", "kitara": "kitaroita", "piano": "pianoja", "viulu": "viuluja", 
+    "rumpu": "rumpuja", "huilu": "huiluja", "trumpetti": "trumpetteja", 
+    "sähkökitara": "sähkökitaroita", "basso": "bassoja", "syntetisaattori": "syntetisaattoreita", 
+    "vahvistin": "vahvistimia", "nuottiteline": "nuottitelineitä",
+
+    # --- MISC COUNTABLE NOUNS ---
+    "esine": "esineitä", "kappale": "kappaleita", "osa": "osia", "ryhmä": "ryhmiä",
+    "joukko": "joukkoja", "pino": "pinoja", "kasa": "kasoja", "rivi": "rivejä",
+    "jono": "jonoja", "aukko": "aukkoja", "reikä": "reikiä", "rako": "rakoja",
+    "pinta": "pintoja", "reuna": "reunoja", "kulma": "kulmia", "keskipiste": "keskipisteitä",
+    "ympyrä": "ympyröitä", "viiva": "viivoja", "piste": "pisteitä", "merkki": "merkkejä",
+    "symboli": "symboleja", "kuva": "kuvia", "varjo": "varjoja", "heijastus": "heijastuksia",
+    "ääni": "ääniä", "melu": "meluja", "kaiku": "kaikuja", "haju": "hajuja",
+    "tuoksu": "tuoksuja", "maku": "makuja", "tunne": "tunteita", "aisti": "aisteja",
+    "hihna": "hihnoja", "hiha": "hihoja", "lahje": "lahkeita", "kaulus": "kauluksia", 
+    "henkseli": "henkseleitä", "uimapuku": "uimapukuja", "bikinien yläosa": "bikinien yläosia", 
+    "viitta": "viittoja", "otsanauha": "otsanauhoja", "rintakoru": "rintakoruja", 
+    "kalvosinnappi": "kalvosinnappeja", "lippalakki": "lippalakkeja", "baretti": "baretteja",
+    "maailma": "maailmoja", "planeetta": "planeettoja", "salama": "salamoita", "myrsky": "myrskyjä",
+    "tulva": "tulvia", "maanjäristys": "maanjäristyksiä", "tulivuori": "tulivuoria", "aavikko": "aavikoita",
+    "viidakko": "viidakkoja", "luola": "luolia", "hiekkaranta": "hiekkarantoja", "valtameri": "valtameriä",
+    "aalto": "aaltoja", "rannikko": "rannikoita",
+
+    # --- ANIMALS & NATURE ---
+    "orava": "oravia", "siili": "siilejä", "hirvi": "hirviä", "peura": "peuroja",
+    "karitsa": "karitsoita", "vuohi": "vuohia", "ankka": "ankkoja", "hanhi": "hanhia",
+    "kana": "kanoja", "kukko": "kukkoja", "pöllö": "pöllöjä", "kotka": "kotkia",
+    "varis": "variksia", "harakka": "harakoita", "pääskynen": "pääskysiä",
+    "muurahainen": "muurahaisia", "mehiläinen": "mehiläisiä", "hämähäkki": "hämähäkkejä",
+    "itikka": "itikoita", "perhonen": "perhosia", "valas": "valaita", "hylje": "hylkeitä",
+    "rapu": "rapuja", "etana": "etanoita", "koira": "koiria", "kissa": "kissoja",
+    "hevonen": "hevosia", "lehmä": "lehmiä", "lammas": "lampaita", "sika": "sikoja",
+    "karhu": "karhuja", "susi": "susia", "kettu": "kettuja", "jänis": "jäniksiä",
+    "lintu": "lintuja", "kala": "kaloja", "käärme": "käärmeitä", "hyönteinen": "hyönteisiä",
+    "puu": "puita", "kukka": "kukkia", "metsä": "metsiä", "järvi": "järviä", "meri": "meriä",
+    "joki": "jokia", "vuori": "vuoria", "mäki": "mäkiä", "saari": "saaria", "niemi": "niemiä",
+    "ranta": "rantoja", "taivas": "taivaita", "aurinko": "aurinkoja", "kuu": "kuita",
+    "tähti": "tähtiä", "pilvi": "pilviä", "ukkonen": "ukkosia", "kivi": "kiviä",
+    "lehti": "lehtiä", "oksa": "oksia", "juuri": "juuria", "marja": "marjoja", "sieni": "sieniä",
+    "puro": "puroja", "lähde": "lähteitä", "tunturi": "tuntureita", "ilves": "ilveksiä",
+    "poro": "poroja", "myyrä": "myyriä", "lepakko": "lepakoita", "joutsen": "joutsenia",
+    "sorsa": "sorsia", "lokki": "lokkeja", "tikka": "tikkoja", "kimalainen": "kimalaisia",
+    "kärpänen": "kärpäsiä", "mato": "matoja", "sammakko": "sammakoita", "sisilisko": "sisiliskoja",
+    "koivu": "koivuja", "mänty": "mäntyjä", "kuusi": "kuusia", "tammi": "tammia",
+    "vaahtera": "vaahteroita", "pihlaja": "pihlajoita", "kanto": "kantoja", "neulanen": "neulasia",
+    "käpy": "käpyjä", "oja": "ojia", "lampi": "lampia", "lahti": "lahtia", "salmi": "salmia",
+    "koski": "koskia", "vesiputous": "vesiputouksia", "jyrkänne": "jyrkänteitä", "huippu": "huippuja",
+    "rinne": "rinteitä", "laakso": "laaksoja", "kyy": "kyitä", "rantakäärme": "rantakäärmeitä",
+    "ahven": "ahvenia", "hauki": "haukia", "lohi": "lohia", "siika": "siikoja",
+    "muikku": "muikkuja", "simpukka": "simpukoita", "mustekala": "mustekaloja",
+    "meduusa": "meduusoja", "pulu": "puluja", "tiikeri": "tiikereitä", "leijona": "leijonia",
+    "norsu": "norsuja", "kirahvi": "kirahveja", "apina": "apinoita", "seepra": "seeproja",
+    "krokotiili": "krokotiileja", "kilpikonna": "kilpikonnia", "pingviini": "pingviinejä",
+    "kameli": "kameleita", "papukaija": "papukaijoja", "päästäinen": "päästäisiä",
+    "majava": "majavia", "nääpikkä": "nääpikköjä", "kärppä": "kärppiä",
+    "ahma": "ahmoja", "mursu": "mursuja",
+
+    # --- BODY PARTS ---
+    "pää": "päitä", "silmä": "silmiä", "korva": "korvia", "nenä": "neniä", "suu": "suita",
+    "huuli": "huulia", "hammas": "hampaita", "kieli": "kieliä", "kaula": "kauloja",
+    "kurkku": "kurkkuja", "olkapää": "olkapäitä", "käsivarsi": "käsivarsia", "käsi": "käsiä",
+    "sormi": "sormia", "rinta": "rintoja", "vatsa": "vatsoja", "selkä": "selkiä",
+    "jalka": "jalkoja", "polvi": "polvia", "varvas": "varpaita", "iho": "ihoja",
+    "luu": "luita", "sydän": "sydämiä", "keuhko": "keuhkoja", "lihas": "lihaksia",
+    "naama": "naamoja", "maksa": "maksoja", "munuainen": "munuaisia", "nivel": "niveliä",
+    "verisuoni": "verisuonia", "hermo": "hermoja", "otsa": "otsia", "leuka": "leukoja",
+    "poski": "poskia", "kulmakarva": "kulmakarvoja", "ripsi": "ripsiä", "napa": "napoja",
+    "vyötärö": "vyötäröitä", "kyynärpää": "kyynärpäitä", "ranne": "ranteita",
+    "kämmen": "kämmeniä", "lantio": "lantioita", "reisi": "reisiä", "pohje": "pohkeita",
+    "nilkka": "nilkkoja", "kantapää": "kantapäitä", "pikkurilli": "pikkurillejä",
+    "nimetön": "nimettömiä", "keskisormi": "keskisormia", "etusormi": "etusormia",
+    "peukalo": "peukaloita", "isoavarvas": "isovarpaita", "kantaluu": "kantaluita",
+    "nikama": "nikamia", "kylkiluu": "kylkiluita", "leukaluu": "leukaluita",
+    "aivonystyrä": "aivonystyröitä", "karva": "karvoja", "pisama": "pisamia",
+    "luomi": "luomia", "arpi": "arpia",
+
+    # --- HOUSE & OBJECTS ---
+    "talo": "taloja", "koti": "koteja", "asunto": "asuntoja", "huone": "huoneita",
+    "keittiö": "keittiöitä", "kylpyhuone": "kylpyhuoneita", "makuuhuone": "makuuhuoneita",
+    "olohuone": "olohuoneita", "eteinen": "eteisiä", "parveke": "parvekkeita",
+    "piha": "pihoja", "ovi": "ovia", "ikkuna": "ikkunoita", "seinä": "seiniä",
+    "katto": "kattoja", "lattia": "lattioita", "porras": "portaita", "lukko": "lukkoja",
+    "avain": "avaimia", "pöytä": "pöytiä", "tuoli": "tuoleja", "sänky": "sänkyjä",
+    "sohva": "sohvia", "kaappi": "kaappeja", "hylly": "hyllyjä", "lamppu": "lamppuja",
+    "matto": "mattoja", "verho": "verhoja", "peili": "peilejä", "taulu": "tauluja",
+    "kello": "kelloja", "radio": "radioita", "televisio": "televisioita",
+    "tietokone": "tietokoneita", "puhelin": "puhelimia", "kone": "koneita", "uuni": "uuneja",
+    "hella": "helloja", "allas": "altaita", "lautanen": "lautasia", "kulho": "kulhoja",
+    "muki": "mukeja", "kuppi": "kuppeja", "veitsi": "veitsiä", "haarukka": "haarukoita",
+    "lusikka": "lusikka", "pannu": "pannuja", "astianpesukone": "astianpesukoneita",
+    "pyykinpesukone": "pyykinpesukoneita", "pakastin": "pakastimia", "mikroaaltouuni": "mikroaaltouuneja",
+    "leivänpaahdin": "leivänpaahtimia", "vedenkeitin": "vedenkeittimiä",
+    "tehosekoitin": "tehosekoittimia", "vatkain": "vatkaimia", "kahvinkeitin": "kahvinkeittimiä",
+    "imuri": "imureita", "laatikko": "laatikoita", "tiskiallas": "tiskialtaita",
+    "hana": "hanoja", "roskakori": "roskakoreja", "tiskiharja": "tiskiharjoja",
+    "sieni": "sieniä", "liina": "liinoja", "tyyny": "tyynyjä", "peitto": "peittoja",
+    "lakana": "lakanoita", "pyyhe": "pyyhkeitä", "henkari": "henkareita", "kampa": "kampoja",
+    "hammasharja": "hammasharjoja", "vasara": "vasaroita", "saha": "sahoja",
+    "ruuvimeisseli": "ruuvimeisseleitä", "naula": "nauloja", "ruuvi": "ruuveja",
+    "ämpäri": "ämpäreitä", "harja": "harjoja", "luuta": "luutia", "lapio": "lapioita",
+    "akku": "akkuja", "pistorasia": "pistorasioita", "sytytin": "sytyttimiä",
+    "kynttilä": "kynttilöitä", "taskulamppu": "taskulamppuja", "porakone": "porakoneita",
+    "jakkara": "jakkaroita", "nojatuoli": "nojatuoleja", "kirjahylly": "kirjahyllyjä",
+    "lipasto": "lipastoja", "yöpöytä": "yöpöytiä", "vaatekaappi": "vaatekaappeja",
+    "kynnys": "kynnyksiä", "kahva": "kahvoja", "sarana": "saranoita", "patteri": "pattereita",
+    "jatkojohto": "jatkojohtoja", "sulake": "sulakkeita", "hehkulamppu": "hehkulamppuja",
+    "varjostin": "varjostimia", "vaasi": "vaaseja", "ruukku": "ruukkuja", "tarjotin": "tarjottimia",
+    "pannunalunen": "pannunalusia", "patakinnas": "patakintaita", "esiliina": "esiliinoja",
+    "leikkuulauta": "leikkuulautoja", "raastin": "raastimia", "siivilä": "siivilöitä",
+    "kuorimaveitsi": "kuorimaveitsiä", "perunasurvin": "perunasurvimia", "vispilä": "vispilöitä",
+    "kaulin": "kaulimia",
+
+    # --- TRANSPORT & CITY ---
+    "auto": "autoja", "bussi": "busseja", "juna": "junia", "lentokone": "lentokoneita",
+    "laiva": "laivoja", "vene": "veneitä", "pyörä": "pyöriä", "moottoripyörä": "moottoripyöriä",
+    "tie": "teitä", "katu": "katuja", "polku": "polkuja", "silta": "siltoja",
+    "tunneli": "tunneleita", "asema": "asemia", "satama": "satamia", "tori": "toreja",
+    "puisto": "puistoja", "kaupunki": "kaupunkeja", "kylä": "kyliä", "keskusta": "keskustoja",
+    "kauppa": "kauppoja", "pankki": "pankkeja", "sairaala": "sairaaloita", "koulu": "kouluja",
+    "kirkko": "kirkkoja", "tehdas": "tehtaita", "hotelli": "hotelleja",
+    "ravintola": "ravintoloita", "kahvila": "kahviloita", "museo": "museoita",
+    "kirjasto": "kirjastoja", "teatteri": "teattereita", "apteekki": "apteekkeja",
+    "lentokenttä": "lentokenttiä", "laituri": "laitureita", "kiitotie": "kiitoteitä",
+    "opas": "oppaita", "kartta": "karttoja", "suunta": "suuntia", "rekka": "rekkoja",
+    "paku": "pakuja", "traktori": "traktoreita", "mopo": "mopoja", "ratikka": "ratikoita",
+    "metro": "metroja", "helikopteri": "helikoptereita", "purjevene": "purjeveneitä",
+    "soutuvene": "soutuveneitä", "liikennemerkki": "liikennemerkkejä",
+    "liikennevalo": "liikennevaloja", "suojatie": "suojateitä", "pysäkki": "pysäkkejä",
+    "parkkipaikka": "parkkipaikkoja", "autotalli": "autotalleja", "pilvenpiirtäjä": "pilvenpiirtäjiä",
+    "mökki": "mökkejä", "talli": "talleja", "navetta": "navettoja", "lato": "latoja",
+    "aita": "aitoja", "portti": "portteja", "penkki": "penkkejä", "patsas": "patsaita",
+    "suihkulähde": "suihkulähteitä",
+
+    # --- FOOD & INGREDIENTS ---
+    "makkara": "makkaroita", "peruna": "perunoita", "vihannes": "vihanneksia",
+    "hedelmä": "hedelmiä", "omena": "omenoita", "banaani": "banaaneja", "sipuli": "sipuleita",
+    "valkosipuli": "valkosipuleita", "porkkana": "porkkanoita", "kurkku": "kurkkuja",
+    "tomaatti": "tomaatteja", "paprika": "paprikoita", "salaatti": "salaatteja",
+    "kaali": "kaaleja", "herne": "herneitä", "papu": "papuja", "maissi": "maisseja",
+    "päärynä": "päärynöitä", "luumu": "luumuja", "viinirypäle": "viinirypäleitä",
+    "mansikka": "mansikoita", "mustikka": "mustikka", "vadelma": "vadelmia",
+    "sitruuna": "sitruunoita", "pähkinä": "pähkinöitä", "siemen": "siemeniä",
+    "leivonnainen": "leivonnaisia", "kakku": "kakkuja", "keksi": "keksejä",
+    "leipä": "leipiä", "sämpylä": "sämpylöitä", "piirakka": "piirakoita",
+    "munkki": "munkkeja", "pulla": "pullia", "voileipä": "voileipiä",
+    "hampurilainen": "hampurilaisia", "pizza": "pizzoja", "kananmuna": "kananmunia",
+    "lihapulla": "lihapullia", "nakki": "nakkeja", "pihvi": "pihvejä",
+    "kyljys": "kyljyksiä", "koipi": "koipia", "filee": "fileitä", "katkarapu": "katkarapuja",
+    "oliivi": "oliiveja", "kapris": "kapriksia", "retiisi": "retiisejä", "parsa": "parsoja",
+    "kukkakaali": "kukkakaaleja", "parsakaali": "parsakaaleja", "munakoiso": "munakoisoja",
+    "kesäkurpitsa": "kesäkurpitsoja",
+
+    # --- MEDIA, OFFICE & TOOLS ---
+    "opiskelija": "opiskelijoita", "opettaja": "opettajia", "rehtori": "rehtoreita",
+    "luokka": "luokkia", "kurssi": "kursseja", "koe": "kokeita", "arvosana": "arvosanoja",
+    "kynä": "kyniä", "lyijykynä": "lyijykyniä", "pyyhekumi": "pyyhekumeja",
+    "viivatin": "viivaimia", "vihko": "vihkoja", "kirja": "kirjoja", "sanakirja": "sanakirjoja",
+    "tussi": "tusseja", "liitu": "liituja", "ammatti": "ammatteja", "kokous": "kokouksia",
+    "sopimus": "sopimuksia", "asiakas": "asiakkaita", "pomo": "pomoja",
+    "työpaikka": "työpaikkoja", "yritys": "yrityksiä", "sanomalehti": "sanomalehtiä",
+    "aikakauslehti": "aikakauslehtiä", "mainos": "mainoksia", "näyttö": "näyttöjä",
+    "näppäimistö": "näppäimistöjä", "hiiri": "hiiriä", "tulostin": "tulostimia",
+    "laturi": "latureita", "kaapeli": "kaapeleita", "kaiutin": "kaiuttimia",
+    "kaukosäädin": "kaukosäätimiä", "sovellus": "sovelluksia", "tiedosto": "tiedostoja",
+    "kansio": "kansioita", "salasana": "salasanoja", "viesti": "viestejä",
+    "mittanauha": "mittanauhoja", "todistus": "todistuksia", "tutkinto": "tutkintoja",
+    "yliopisto": "yliopistoja", "lasku": "laskuja", "kuitti": "kuitteja",
+    "allekirjoitus": "allekirjoituksia", "vankila": "vankiloita", "nitoja": "nitojia",
+    "klemmari": "klemmareita", "teippirulla": "teippirullia", "kirjekuori": "kirjekuoria",
+    "postimerkki": "postimerkkejä", "kalenteri": "kalentereita",
+    "muistilehtiö": "muistilehtiöitä", "piirustus": "piirustuksia", "valokuva": "valokuvia",
+    "maalaus": "maalauksia", "veistos": "veistoksia", "kamera": "kameroita",
+    "objektiivi": "objektiiveja", "jalusta": "jalustoja", "mikrofoni": "mikrofoneja",
+    "kuuloke": "kuulokkeita", "levy": "levyjä", "muistitikku": "muistitikkuja",
+    "reititin": "reitittimiä",
+
+    # --- TIME & ABSTRACT ---
+    "sekunti": "sekunteja", "minuutti": "minuutteja", "tunti": "tunteja", "päivä": "päiviä",
+    "viikko": "viikkoja", "kuukausi": "kuukausia", "vuosi": "vuosia", "vuosisata": "vuosisatoja",
+    "aamu": "aamuja", "ilta": "iltoja", "yö": "öitä", "maanantai": "maanantaita",
+    "tiistai": "tiistaita", "keskiviikko": "keskiviikkoja", "torstai": "torstaita",
+    "perjantai": "perjantaita", "lauantai": "lauantaita", "sunnuntai": "sunnuntaita",
+    "asia": "asioita", "sana": "sanoja", "nimi": "nimiä", "numero": "numeroita",
+    "ongelma": "ongelmia", "vastaus": "vastauksia", "kysymys": "kysymyksiä", "muisto": "muistoja",
+    "uni": "unia", "ajatus": "ajatuksia", "liike": "liikkeitä", "matka": "matkoja",
+    "peli": "pelejä", "voitto": "voittoja", "häviö": "häviöitä", "muoto": "muotoja",
+    "tauko": "taukoja", "hetki": "hetkiä", "tapahtuma": "tapahtumia", "juhla": "juhlia",
+    "esitys": "esityksiä", "näyttely": "näyttelyitä", "konsertti": "konsertteja",
+    "elokuva": "elokuvia", "sarja": "sarjoja", "jakso": "jaksoja", "luku": "lukuja",
+    "sivu": "sivuja", "virhe": "virheitä", "sääntö": "sääntöjä", "laki": "lakeja",
+    "oikeus": "oikeuksia", "velvollisuus": "velvollisuuksia", "tehtävä": "tehtäviä",
+    "projekti": "projekteja", "suunnitelma": "suunnitelmia", "idea": "ideoita",
+    "unelma": "unelmia", "toive": "toiveita", "pelko": "pelkoja", "salaisuus": "salaisuuksia",
+    "vitsi": "vitsejä", "tarina": "tarinoita", "runo": "runoja", "laulu": "lauluja",
+    "nuotti": "nuotteja", "sointu": "sointuja", "rytmi": "rytmejä",
+
+    # --- PROFESSIONS ---
+    "lääkäri": "lääkäreitä", "hoitaja": "hoitajia", "poliisi": "poliiseja",
+    "palomies": "palomiehiä", "sotilas": "sotilaita", "lentäjä": "lentäjiä",
+    "kapteeni": "kapteeneja", "kuljettaja": "kuljettajia", "kokki": "kokkeja",
+    "tarjoilija": "tarjoilijoita", "myyjä": "myyjiä", "siivooja": "siivoojia",
+    "insinööri": "insinöörejä", "arkkitehti": "arkkitehteja", "ohjelmoija": "ohjelmoijia",
+    "taitaja": "taitajia", "taiteilija": "taiteilijoita", "muusikko": "muusikoita",
+    "näyttelijä": "näyttelijöitä", "ohjaaja": "ohjaajia", "toimittaja": "toimittajia",
+    "kirjailija": "kirjailijoita", "runoilija": "runoilijoita", "tutkija": "tutkijoita",
+    "tiedemies": "tiedemiehiä", "lakimies": "lakimiehiä", "tuomari": "tuomareita",
+    "pappi": "pappeja", "piispa": "piispoja", "kuningas": "kuninkaita",
+    "kuningatar": "kuningattaria", "presidentti": "presidenttejä", "ministeri": "ministereitä",
+   "edustaja": "edustajia", "johtaja": "johtajia",
+    "työntekijä": "työntekijöitä", "harjoittelija": "harjoittelijoita",
+    "asiantuntija": "asiantuntijoita", "neuvonantaja": "neuvonantajia",
+   "sähköasentaja": "sähköasentajia",
+    "putkiasentaja": "putkiasentajia", "muurari": "muurareita", "puuseppä": "puuseppiä",
+    "leipuri": "leipureita", "parturi": "partureita", "kampaaja": "kampaajia",
+    "kosmetologi": "kosmetologeja", "valokuvaaja": "valokuvaajia",
+
+    # --- TECHNICAL & INDUSTRIAL ---
+    "pumppu": "pumppuja", "moottori": "moottoreita", "turbiini": "turbiineja",
+    "generaattori": "generaattoreita", "muuntaja": "muuntajia", "venttiili": "venttiilejä",
+    "putki": "putkia", "johto": "johtoja", "kaapeli": "kaapeleita", "kytkin": "kytkimiä",
+    "anturi": "antureita", "mittari": "mittareita", "robotti": "robotteja", "siru": "siruja",
+    "prosessori": "prosessoreita", "kovalevy": "kovalevyjä", "virtalähde": "virtalähteitä",
+    "jäähdytin": "jäähdyttimiä", "tuuletin": "tuulettimia", "suodatin": "suodattimia",
+    "tiiviste": "tiivisteitä", "laakeri": "laakereita", "hammaspyörä": "hammaspyöriä",
+    "ketju": "ketjuja", "vipu": "vipuja", "jousi": "jousia", "pultti": "pultteja",
+    "mutteri": "muttereita", "prikka": "prikkoja", "niitti": "niittejä",
+    "hitsaussauma": "hitsaussaumoja", "teline": "telineitä", "nosturi": "nostureita",
+    "trukki": "trukkeja", "kontti": "kontteja", "lava": "lavoja", "mutteriavain": "mutteriavaimia",
+    "ruuvitaltta": "ruuvitalttoja", "pora": "poria", "hiomakone": "hiomakoneita",
+    "sirkkeli": "sirkkeleitä", "höylä": "höyliä", "taltta": "talttoja", "viila": "viiloja",
+    "leka": "lekoja", "sorkkarauta": "sorkkarautoja", "lapio": "lapioita", "hanko": "hankoja",
+    "viikate": "viikatteita", "sirppi": "sirppejä", "kottikärry": "kottikärryjä",
+    "kompressori": "kompressoreita", "hitsikone": "hitsikoneita", "sorvi": "sorveja",
+    "jyrsin": "jyrsimiä", "painepesuri": "painepesureita", "ruohonleikkuri": "ruohonleikkureita",
+    "lehtipuhallin": "lehtipuhaltimia", "lumilinko": "lumilinkoja", "aggregaatti": "aggregaatteja",
+    "rele": "releitä", "vastus": "vastuksia", "kondensaattori": "kondensaattoreita",
+    "diodi": "diodeja", "transistori": "transistoreita", "piirilevy": "piirilevyjä",
+    "antenni": "antenneja", "satelliitti": "satelliitteja", "kaukoputki": "kaukoputkia",
+    "mikroskooppi": "mikroskooppeja", "laboratoriotakki": "laboratoriotakkeja",
+    "koeputki": "koeputkia", "pipetti": "pipettejä", "vaaka": "vaakoja",
+    "lämpömittari": "lämpömittareita", "verenpainemittari": "verenpainemittareita",
+    "stetoskooppi": "stetoskooppeja", "ruisku": "ruiskuja", "laastari": "laastareita",
+    "sideharsorulla": "sideharsorullia", "pyörätuoli": "pyörätuoleja", "kipsi": "kipsejä",
+    "tekohammas": "tekohampaita", "kuulolaite": "kuulolaitteita",
+    "silmälasinsanka": "silmälasinsankoja", "piilolinssi": "piilolinssejä",
+    "hammasrauta": "hammasrautoja", "tutti": "tutteja", "vaippa": "vaippoja",
+    "vaunu": "vaunuja", "ratas": "rattaita", "keinu": "keinuja", "liukumäki": "liukumäkiä",
+    "hiekkalaatikko": "hiekkalaatikoita", "kiipeilyteline": "kiipeilytelineitä",
+    "lippu": "lippuja", "viiri": "viirejä", "kilpi": "kilpiä", "miekka": "miekkoja",
+    "nuoli": "nuolia", "keihäs": "keihäitä", "kanuuna": "kanuunoita",
+    "panssarivaunu": "panssarivaunuja", "sukellusvene": "sukellusveneitä",
+    "laskuvarjo": "laskuvarjoja", "kuumailmapallo": "kuumailmapalloja",
+    "avaruusalus": "avaruusaluksia", "raketti": "raketteja", "komeetta": "komeettoja",
+    "asteroidi": "asteroideja", "galaksi": "galakseja",
+    "sumu": "sumuja", "tähdenlento": "tähdenlentoja", "tee":"teitä","juusto":"juustoja","voi":"voita","sokeri":"sokereita","maito":"maitoja",
 
 "ovi":"ovia","sormi":"sormia","polvi":"polvia","silmä":"silmiä","hammas":"hampaita",
 "jalka":"jalkoja","kävely":"kävelyjä","hyppy":"hyppyjä","lento":"lentoja",
@@ -1410,32 +2245,40 @@ def run_tests():
 
 }
 
-    correct = 0
-    total = 0
-
     print("---- Singular tests ----")
+    total_sg = 0
+    correct_sg = 0
+    
     for word, expected in tests_sg.items():
         result = partitive_sg(word)
-        total += 1
+        total_sg += 1
         if result == expected:
-            print(f"✅ {word} → {result}")
-            correct += 1
+            correct_sg += 1
         else:
             print(f"❌ {word} → {result} (should be {expected})")
 
     print("\n---- Plural tests ----")
+    total_pl = 0
+    correct_pl = 0
+    
     for word, expected in tests_pl.items():
         result = partitive_pl(word)
-        total += 1
+        total_pl += 1
         if result == expected:
-            print(f"✅ {word} → {result}")
-            correct += 1
+            correct_pl += 1
         else:
             print(f"❌ {word} → {result} (should be {expected})")
 
-    print(f"\nResult: {correct}/{total} correct ({(correct/total)*100:.2f}%)\n")
+    total = total_sg + total_pl
+    correct = correct_sg + correct_pl
+    
+    print("\n--- Summary ---")
+    if correct == total:
+        print("✅ Everything looks perfect!")
+    
+    print(f"Result: {correct}/{total} correct ({(correct/total)*100:.2f}%)")
 
-if True:
+if False:
     main()
 else:
     run_tests()
