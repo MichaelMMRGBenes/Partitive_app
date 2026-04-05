@@ -4,6 +4,12 @@ vocals_without_a = "eiouäöy"
 changing_vowels = "äyö"
 neutralising_vocals = "aou"
 
+diphthongs = {
+        "ai","ei","oi","ui","yi","äi","öi",
+        "au","eu","iu","ou","äy","öy","ey","iy",
+        "ie","uo","yö","io"
+    }
+
 exceptions_5_to_4 = ["selvitä", "hävitä"]
 exceptions_6_to_4 = ["hävetä", "kiivetä", "ruveta", "todeta"]
 exceptions_4_to_6 = ["hapata", "loitota", "helpota", "parata"]
@@ -15,7 +21,7 @@ verbs = [
     "hypätä", "häiritä", "ihailla", "ihmetellä", "ilmoittaa", "istua", "itkeä", "jatkaa", "johtaa", "joutua",
     "juhlia", "juoda", "juosta", "jäädä", "kaivata", "kantaa", "katsoa", "kertoa", "kiittää", "kirjoittaa",
     "koettaa", "kohtalo", "kokeilla", "kokata", "kokonaan", "korjata", "kotiutua", "kouluuntua", "kuivata", "kujertaa",
-    "kuluu", "kuolla", "kuunnella", "kuulla", "kuvailla", "kylmetä", "kysyä", "kävellä", "käydä", "käyttää",
+    "kulua", "kuolla", "kuunnella", "kuulla", "kuvailla", "kylmetä", "kysyä", "kävellä", "käydä", "käyttää",
     "laittaa", "ladata", "lainata", "lakata", "laskea", "laulaa", "leikkiä", "lentää", "levätä", "liikkua",
     "lisätä", "loppua", "lukea", "luvata", "lähettää", "lähteä", "löytää", "mainita", "maistaa", "maksaa",
     "matkustaa", "meinata", "mennä", "merkitä", "miettiä", "muistaa", "muuttaa", "myydä", "myöntää", "nauraa",
@@ -29,7 +35,7 @@ verbs = [
     "tarjeta", "tarvita", "tavata", "tavoittaa", "tehdä", "tietää", "tilata", "toivoa", "toimia", "toivottaa",
     "tuoda", "tuomita", "tulla", "tuntea", "tutustua", "tykätä", "työskennellä", "uida", "unohtaa", "uskaltaa",
     "uskoa", "vaatia", "vaihtaa", "valita", "valjeta", "valmistaa", "vanheta", "vastata", "viedä", "voida",
-    "vuokrata", "välittää", "väsyä", "ymmärtää", "yrittää", "ystävystyä", "yöpyä", "älytä", "ääntää", "ölistä"
+    "vuokrata", "välittää", "väsyä", "ymmärtää", "yrittää", "ystävystyä", "yöpyä", "älytä", "ääntää", "ölistä", "noutaa", "soutaa"
 ]
 
 
@@ -284,8 +290,41 @@ def present_type_1_conjugation(word, pronoun):
 
 def imperfect_type_1_conjugation(word, pronoun):
     syllables = syllables_decider(word)
+    exeptions = ["antaa", "kantaa", "noutaa", "soutaa"]
+    #lentää -> lensin, ymmärtää -> ymmärsin        
+    if ((word[-4:] in ("ltaa", "ltää","rtaa","rtää","ntaa", "ntää", "nteä", "ntea") or (word[-3:] in ("taa","tää") and word[-4] in vocals and word[-5] in vocals))) and word not in exeptions:
+        vocal_ending = "si"
+        vartalo = word[:-3]
+        if pronoun == "minä":
+            conjugated_verb = vartalo + vocal_ending + "n"
+            return conjugated_verb
+
+        elif pronoun == "sinä":
+            conjugated_verb = vartalo + vocal_ending + "t"
+            return conjugated_verb
+        
+        elif pronoun == "me":
+            conjugated_verb = vartalo + vocal_ending + "mme"
+            return conjugated_verb
+        
+        elif pronoun == "te":
+            conjugated_verb = vartalo + vocal_ending + "tte"
+            return conjugated_verb
+            
+        elif pronoun == "hän":
+            conjugated_verb = vartalo + vocal_ending
+            return conjugated_verb
+        
+        elif pronoun == "he":
+            if any(vowel in word for vowel in changing_vowels):
+                conjugated_verb = vartalo + vocal_ending + "vät"
+                return conjugated_verb
+            else:
+                conjugated_verb = vartalo + vocal_ending + "vat"
+                return conjugated_verb
+            
     #sanoa -> sanoin , kysyä -> kysyin
-    if word[-2:] in ("ua", "yä", "oa", "öä"):
+    elif word[-2:] in ("ua", "yä", "oa", "öä"):
         vocal_ending = word[-2] + "i"
         vartalo = word[:-2]
         if pronoun not in ("hän", "he"):
@@ -317,7 +356,7 @@ def imperfect_type_1_conjugation(word, pronoun):
                 return conjugated_verb
             
     #säästää - säästin itkeä - itkin & tanssia -> tanssin    
-    elif word[-2:] in ("ea", "eä", "ää", "ia", "iä"):
+    elif word[-2:] in ("ea", "eä", "ää", "ia", "iä") and word != "tuntea":
         vocal_ending = "i"
         vartalo = word[:-2]
         if pronoun not in ("hän", "he"):
@@ -379,7 +418,7 @@ def imperfect_type_1_conjugation(word, pronoun):
             else:
                 conjugated_verb = vartalo + vocal_ending + "vat"
                 return conjugated_verb
-            
+                        
     #ostaa -> ostin, rakastaa -> rakastin        
     elif word[-2:] == "aa":
         vocal_ending = "i"
@@ -412,37 +451,23 @@ def imperfect_type_1_conjugation(word, pronoun):
                 conjugated_verb = vartalo + vocal_ending + "vat"
                 return conjugated_verb
             
-    #lentää -> lensin, ymmärtää -> ymmärsin        
-    elif word[-4:] in ("ltaa", "ltää","rtaa","rtää","ntaa", "ntää") or (word[-3:] in ("taa","tää") and word[-4] in vocals and word[-5] in vocals):
-        vocal_ending = "si"
-        vartalo = word[:-3]
-        if pronoun == "minä":
-            conjugated_verb = vartalo_after_KPT_change + vocal_ending + "n"
-            return conjugated_verb
+def perfect_type_1_conjugation(word, pronoun):
+    
+    special_cases = ["tietää", "taitaa"]
+    vartalo = word[:-1]
 
-        elif pronoun == "sinä":
-            conjugated_verb = vartalo_after_KPT_change + vocal_ending + "t"
-            return conjugated_verb
-        
-        elif pronoun == "me":
-            conjugated_verb = vartalo_after_KPT_change + vocal_ending + "mme"
-            return conjugated_verb
-        
-        elif pronoun == "te":
-            conjugated_verb = vartalo_after_KPT_change + vocal_ending + "tte"
-            return conjugated_verb
-            
-        elif pronoun == "hän":
-            conjugated_verb = vartalo + vocal_ending
-            return conjugated_verb
-        
-        elif pronoun == "he":
+    if word in special_cases:
+        vartalo = word[:-3] + "n" 
+    if pronoun in ("minä", "sinä", "hän"):
             if any(vowel in word for vowel in changing_vowels):
-                conjugated_verb = vartalo + vocal_ending + "vät"
-                return conjugated_verb
+                return vartalo + "nyt"
             else:
-                conjugated_verb = vartalo + vocal_ending + "vat"
-                return conjugated_verb
+                return vartalo + "nut"
+    else:
+        return vartalo + "neet"
+
+
+            
 
 def present_type_2_conjugation(word, pronoun):
 
@@ -508,7 +533,131 @@ def present_type_2_conjugation(word, pronoun):
             else:
                 conjugated_verb = vartalo + "vat"
                 return conjugated_verb
-    
+            
+def imperfect_type_2_conjugation(word,pronoun):
+    #kaydä
+    if word == "käydä":
+        vartalo = "kävi"
+        if pronoun == "minä":
+            return vartalo + "n"
+        elif pronoun == "sinä":
+            return vartalo + "t"
+        elif pronoun == "hän":
+            return vartalo
+        elif pronoun == "me":
+            return vartalo + "mme"
+        elif pronoun == "te":
+            return vartalo + "tte"
+        elif pronoun == "he":
+            return vartalo + "vät"
+        
+    #tehdä or nähdä  -> näin, tein  
+    elif word in ("nähdä", "tehdä"):
+        vartalo = word[:-3]
+        if pronoun == "minä":
+            return vartalo + "in"
+        elif pronoun == "sinä":
+            return vartalo + "it"
+        elif pronoun == "hän":
+            return vartalo + "ki"
+        elif pronoun == "me":
+            return vartalo + "imme"
+        elif pronoun == "te":
+            return vartalo + "itte"
+        elif pronoun == "he":
+            return vartalo + "kivät"
+        
+    #voida tupakoida  -> tupakoin  
+    elif word[-3:] in ("idä", "ida"):
+        vartalo = word[:-2]
+        if pronoun == "minä":
+            return vartalo + "n"
+        elif pronoun == "sinä":
+            return vartalo + "t"
+        elif pronoun == "hän":
+            return vartalo
+        elif pronoun == "me":
+            return vartalo + "mme"
+        elif pronoun == "te":
+            return vartalo + "tte"
+        elif pronoun == "he":
+            if any(vowel in word for vowel in changing_vowels) or not any(vowel in word for vowel in neutralising_vocals):
+
+                return vartalo + "vät"
+            else:
+                return vartalo + "vat"
+            
+    #juoda -> join, syödä -> söin        
+    elif syllables_decider(word) == 2:
+        vartalo = word[:-2]
+        if vartalo[-2:] in diphthongs:
+            if any(vowel in word for vowel in changing_vowels) or not any(vowel in word for vowel in neutralising_vocals):
+                vartalo_after_change = vartalo[:-2] + "öi"
+            else:
+                vartalo_after_change = vartalo[:-2] + "oi"
+
+            if vartalo[-2:] == "ie":
+                vartalo_after_change = vartalo[:-2] + "ei"
+
+            if pronoun == "minä":
+                return vartalo_after_change + "n"
+            
+            elif pronoun == "sinä":
+                return vartalo_after_change + "t"
+            
+            elif pronoun == "hän":
+                return vartalo_after_change
+            
+            elif pronoun == "me":
+                return vartalo_after_change + "mme"
+            
+            elif pronoun == "te":
+                return vartalo_after_change + "tte"
+            
+            elif pronoun == "he":
+                if any(vowel in word for vowel in changing_vowels) or not any(vowel in word for vowel in neutralising_vocals):
+
+                    return vartalo_after_change + "vät"
+                else:
+                    return vartalo_after_change + "vat"
+                
+        #myydä -> myin saada -> sain        
+        else:
+            vartalo = word[:-2]
+            vartalo_after_change = vartalo[:-1] + "i"
+
+            if pronoun == "minä":
+                return vartalo_after_change + "n"
+            
+            elif pronoun == "sinä":
+                return vartalo_after_change + "t"
+            
+            elif pronoun == "hän":
+                return vartalo_after_change
+            
+            elif pronoun == "me":
+                return vartalo_after_change + "mme"
+            
+            elif pronoun == "te":
+                return vartalo_after_change + "tte"
+            
+            elif pronoun == "he":
+                if any(vowel in word for vowel in changing_vowels) or not any(vowel in word for vowel in neutralising_vocals):
+
+                    return vartalo_after_change + "vät"
+                else:
+                    return vartalo_after_change + "vat"
+
+def perfect_type_2_conjugation(word, pronoun):
+    vartalo = word[:-2]
+    if pronoun in ("minä", "sinä", "hän"):
+            if any(vowel in word for vowel in changing_vowels):
+                return vartalo + "nyt"
+            else:
+                return vartalo + "nut"
+    else:
+        return vartalo + "neet"
+
 def present_type_3_conjugation(word, pronoun):
     exceptions = ["juosta"]
 
@@ -520,6 +669,7 @@ def present_type_3_conjugation(word, pronoun):
     vartalo_after_change = (reverse_KPT_change(vartalo_to_process,"type 3"))
 
     if word == "olla" and pronoun == "hän": return "on"
+    if word == "olla" and pronoun == "he": return "ovat"
 
     if word in exceptions:
         ending = ""
@@ -553,6 +703,62 @@ def present_type_3_conjugation(word, pronoun):
         else:
             conjugated_verb  = vartalo_after_change + ending + "evat"
             return conjugated_verb
+        
+def imperfect_type_3_conjugation(word, pronoun):
+    exceptions = ["juosta"]
+
+    #opiskella, ajatella, mennä
+    ending = word[-4:-2]
+    #opisk(el), ajat(el), m(en)
+    vartalo_to_process = word[:-4]
+    #opisk, ajat, m
+    vartalo_after_change = (reverse_KPT_change(vartalo_to_process,"type 3"))
+
+    if word in exceptions:
+        ending = ""
+        vartalo_after_change = word[:-3] + "ks"
+
+    if pronoun == "minä":
+        conjugated_verb = vartalo_after_change + ending + "in"
+        return conjugated_verb
+
+    elif pronoun == "sinä":
+        conjugated_verb = vartalo_after_change + ending + "it"
+        return conjugated_verb
+        
+    elif pronoun == "me":
+        conjugated_verb = vartalo_after_change + ending + "imme"
+        return conjugated_verb
+        
+    elif pronoun == "te":
+        conjugated_verb = vartalo_after_change + ending + "itte"
+        return conjugated_verb
+            
+    elif pronoun == "hän":
+            conjugated_verb = vartalo_after_change + ending + "i"
+            return conjugated_verb
+        
+    elif pronoun == "he":
+        if any(vowel in word for vowel in changing_vowels) or not any(vowel in word for vowel in neutralising_vocals):
+            conjugated_verb = vartalo_after_change + ending + "ivät"
+            return conjugated_verb
+        
+        else:
+            conjugated_verb  = vartalo_after_change + ending + "ivat"
+            return conjugated_verb
+        
+def perfect_type_3_conjugation(word, pronoun):
+    #kävellä
+    vartalo = word[:-2]
+    if pronoun in ("minä", "sinä", "hän"):
+            ending = vartalo[-1]
+            if any(vowel in word for vowel in changing_vowels):
+                return vartalo + ending + "yt"
+            else:
+                return vartalo + ending + "ut"
+    else:
+        ending = vartalo[-1]
+        return vartalo + ending + "eet"
 
 #haluata pakata
 def present_type_4_conjugation(word, pronoun):
@@ -631,6 +837,63 @@ def present_type_4_conjugation(word, pronoun):
         else:
             conjugated_verb  = vartalo_after_change + ending + "avat"
             return conjugated_verb
+        
+
+def imperfect_type_4_conjugation(word, pronoun):
+    exceptions = ["pelätä"]
+    #hal(u)ata pak(a)ta
+    vartalo = word[:-3]
+    ending = word[-3]
+    if word not in exceptions_5_to_4:
+        vartalo_after_change = reverse_KPT_change(vartalo,"type 4")
+    else:
+        vartalo_after_change = vartalo
+
+
+    if word in exceptions:
+        vartalo_after_change = word[:-3] + "k"
+
+    if pronoun == "minä":
+        conjugated_verb = vartalo_after_change + ending + "sin"
+        return conjugated_verb
+
+
+
+    elif pronoun == "sinä":
+        conjugated_verb = vartalo_after_change + ending + "sit"
+        return conjugated_verb
+        
+    elif pronoun == "me":
+        conjugated_verb = vartalo_after_change + ending + "simme"
+        return conjugated_verb
+        
+    elif pronoun == "te":
+        conjugated_verb = vartalo_after_change + ending + "sitte"
+        return conjugated_verb
+            
+    elif pronoun == "hän":
+            conjugated_verb = vartalo_after_change + ending + "si"
+            return conjugated_verb
+                    
+    elif pronoun == "he":
+        if any(vowel in word for vowel in changing_vowels) or not any(vowel in word for vowel in neutralising_vocals):
+            conjugated_verb = vartalo_after_change + ending + "sivät"
+            return conjugated_verb
+        
+        else:
+            conjugated_verb  = vartalo_after_change + ending + "sivat"
+            return conjugated_verb
+     
+def perfect_type_4_conjugation(word, pronoun):
+    #kiivetä -> kiivennyt
+    vartalo = word[:-2]
+    if pronoun in ("minä", "sinä", "hän"):
+            if any(vowel in word for vowel in changing_vowels):
+                return vartalo + "nnyt"
+            else:
+                return vartalo +  "nnut"
+    else:
+        return vartalo + "nneet"
 
 def present_type_5_conjugation(word, pronoun):
     #tarvita -> tarvitse
@@ -664,6 +927,50 @@ def present_type_5_conjugation(word, pronoun):
         else:
             conjugated_verb = vartalo_after_change + "vat"
             return conjugated_verb
+        
+def imperfect_type_5_conjugation(word, pronoun):
+    #tarvita -> tarvitse
+    vartalo = word[:-1]
+    vartalo_after_change = vartalo + "si"
+
+    if pronoun == "minä":
+        conjugated_verb = vartalo_after_change + "n"
+        return conjugated_verb
+
+    elif pronoun == "sinä":
+        conjugated_verb = vartalo_after_change + "t"
+        return conjugated_verb
+    
+    elif pronoun == "me":
+        conjugated_verb = vartalo_after_change + "mme"
+        return conjugated_verb
+    
+    elif pronoun == "te":
+        conjugated_verb = vartalo_after_change + "tte"
+        return conjugated_verb
+        
+    elif pronoun == "hän":
+        conjugated_verb = vartalo_after_change
+        return conjugated_verb
+    
+    elif pronoun == "he":
+        if any(vowel in word for vowel in changing_vowels):
+            conjugated_verb = vartalo_after_change + "vät"
+            return conjugated_verb
+        else:
+            conjugated_verb = vartalo_after_change + "vat"
+            return conjugated_verb
+        
+def perfect_type_5_conjugation(word, pronoun):
+    #häiritä -> häirinnyt
+    vartalo = word[:-2]
+    if pronoun in ("minä", "sinä", "hän"):
+            if any(vowel in word for vowel in changing_vowels):
+                return vartalo + "nnyt"
+            else:
+                return vartalo +  "nnut"
+    else:
+        return vartalo + "nneet"
         
 def present_type_6_conjugation(word, pronoun):
     exceptions = ["aueta","kyetä", "vaieta","paeta"]
@@ -703,6 +1010,54 @@ def present_type_6_conjugation(word, pronoun):
             conjugated_verb = vartalo_after_KPT_change + ending + "nevat"
             return conjugated_verb
 
+def imperfect_type_6_conjugation(word, pronoun):
+    exceptions = ["aueta","kyetä", "vaieta","paeta"]
+    #Vanheta  -> vanhenen
+    vartalo = word[:-3]
+    ending = word[-3]
+    vartalo_after_KPT_change = reverse_KPT_change(vartalo,"type 6")
+
+    if word in exceptions:
+        vartalo_after_KPT_change = word[:-3] + "k"
+
+    if pronoun == "minä":
+        conjugated_verb = vartalo_after_KPT_change + ending + "nin"
+        return conjugated_verb
+
+    elif pronoun == "sinä":
+        conjugated_verb = vartalo_after_KPT_change + ending + "nit"
+        return conjugated_verb
+    
+    elif pronoun == "me":
+        conjugated_verb = vartalo_after_KPT_change + ending + "nimme"
+        return conjugated_verb
+    
+    elif pronoun == "te":
+        conjugated_verb = vartalo_after_KPT_change + ending + "nitte"
+        return conjugated_verb
+        
+    elif pronoun == "hän":
+        conjugated_verb = vartalo_after_KPT_change + ending + "ni"
+        return conjugated_verb
+    
+    elif pronoun == "he":
+        if any(vowel in word for vowel in changing_vowels):
+            conjugated_verb = vartalo_after_KPT_change + ending + "nivät"
+            return conjugated_verb
+        else:
+            conjugated_verb = vartalo_after_KPT_change + ending + "nivat"
+            return conjugated_verb
+        
+def perfect_type_6_conjugation(word, pronoun):
+    #rohjeta -> rohjennut -> rohjenneet
+    vartalo = word[:-2]
+    if pronoun in ("minä", "sinä", "hän"):
+            if any(vowel in word for vowel in changing_vowels):
+                return vartalo + "nnyt"
+            else:
+                return vartalo +  "nnut"
+    else:
+        return vartalo + "nneet"
 
 def verb_conjugation_present(word:str):
     pronoun = random_pronoun()
@@ -732,12 +1087,46 @@ def verb_conjugation_imperfect(word:str):
     verb_type = type_recognision(word)
 
     if verb_type == "type 1":
-        print(f"{word}, {verb_type}: {pronoun} {(imperfect_type_1_conjugation(word, pronoun))}")
+       print(f"{word}, {verb_type}: {pronoun} {(imperfect_type_1_conjugation(word, pronoun))}")
+
+    elif verb_type == "type 2":
+        print(f"{word}, {verb_type}: {pronoun} {(imperfect_type_2_conjugation(word, pronoun))}")
+    
+    elif verb_type == "type 3":
+        print(f"{word}, {verb_type}: {pronoun} {(imperfect_type_3_conjugation(word, pronoun))}")
+
+    elif verb_type == "type 4":
+        print(f"{word}, {verb_type}: {pronoun} {(imperfect_type_4_conjugation(word, pronoun))}")
+
+    elif verb_type == "type 5":
+        print(f"{word}, {verb_type}: {pronoun} {(imperfect_type_5_conjugation(word, pronoun))}")
+
+    elif verb_type == "type 6":
+        print(f"{word}, {verb_type}: {pronoun} {(imperfect_type_6_conjugation(word, pronoun))}")
 
 
+def verb_conjugation_perfect(word:str):
+    pronoun = random_pronoun()
+    verb_type = type_recognision(word)
 
+    if verb_type == "type 1":
+       print(f"{word}, {verb_type}: {pronoun} {present_type_3_conjugation("olla", pronoun)} {(perfect_type_1_conjugation(word, pronoun))}")
 
-special_verbs = ["selvitä", "hävitä","hävetä","kiivetä", "ruveta","todeta","hapata","loitota", "helpota","parata"]
+    elif verb_type == "type 2":
+        print(f"{word}, {verb_type}: {pronoun} {present_type_3_conjugation("olla", pronoun)} {(perfect_type_2_conjugation(word, pronoun))}")
+    
+    elif verb_type == "type 3":
+        print(f"{word}, {verb_type}: {pronoun} {present_type_3_conjugation("olla", pronoun)} {(perfect_type_3_conjugation(word, pronoun))}")
+
+    elif verb_type == "type 4":
+        print(f"{word}, {verb_type}: {pronoun} {present_type_3_conjugation("olla", pronoun)} {(perfect_type_4_conjugation(word, pronoun))}")
+
+    elif verb_type == "type 5":
+        print(f"{word}, {verb_type}: {pronoun} {present_type_3_conjugation("olla", pronoun)} {(perfect_type_5_conjugation(word, pronoun))}")
+
+    elif verb_type == "type 6":
+        print(f"{word}, {verb_type}: {pronoun} {present_type_3_conjugation("olla", pronoun)} {(perfect_type_6_conjugation(word, pronoun))}")
+    
 
 for verb in verbs:
-    verb_conjugation_imperfect(verb)
+    verb_conjugation_perfect(verb)
